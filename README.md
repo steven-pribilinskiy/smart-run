@@ -7,7 +7,7 @@
 
 ## Features
 
-- 🧠 **AI-Powered**: Automatic script analysis and intelligent grouping (coming soon)
+- 🧠 **AI-Powered**: Automatic script analysis and intelligent grouping with OpenAI, Claude, or Gemini
 - 📋 **Interactive Menu**: Beautiful CLI interface for selecting scripts
 - 🏷️ **Multiple Configuration Methods**: Support for package-meta.yaml, npm-scripts organization, and ntl descriptions
 - 📝 **Rich Descriptions**: Add meaningful descriptions to your scripts
@@ -16,6 +16,7 @@
 - 🎨 **Colorized Output**: Visual indicators for different script states
 - 🔄 **Smart Fallbacks**: Automatically detects best configuration method
 - ⚡ **Multiple Aliases**: Use `smart-run`, `srun`, or `sr` - whatever feels natural
+- 📋 **Manual AI Workflow**: Generate prompts for external AI tools when API keys aren't available
 
 ## Installation
 
@@ -96,6 +97,57 @@ sr
 ```
 
 3. Select and run your scripts interactively!
+
+## AI-Powered Script Analysis
+
+Smart-run can automatically analyze your npm scripts and generate intelligent configurations using AI.
+
+### Automatic AI Analysis
+
+If you have an API key configured, smart-run can automatically analyze and categorize your scripts:
+
+```bash
+# Set up your API key (choose one)
+export OPENAI_API_KEY="your-openai-key"
+export ANTHROPIC_API_KEY="your-claude-key" 
+export GOOGLE_API_KEY="your-gemini-key"
+
+# Run AI analysis
+smart-run --ai
+```
+
+The AI will:
+- ✅ Analyze all your npm scripts
+- ✅ Group them by purpose (Development, Testing, Build, etc.)
+- ✅ Generate clear, helpful descriptions
+- ✅ Create a ready-to-use package-meta.yaml configuration
+- ✅ Offer to save or copy the result
+
+### Manual AI Workflow
+
+No API key? No problem! Smart-run can generate prompts for any AI tool:
+
+```bash
+smart-run --ai
+# Choose "Manual Prompt" option
+# Copy the generated prompt to ChatGPT, Claude, or any AI tool
+# Get your configuration and save it as package-meta.yaml
+```
+
+### First-Time Setup
+
+When you run smart-run on a project without configuration, it will automatically offer:
+- 🧠 AI analysis (if API keys are available)
+- 📝 Manual prompt generation
+- 📄 Basic example configuration
+- ⏭️ Continue without configuration
+
+### Supported AI Providers
+
+- **OpenAI** (GPT-3.5/GPT-4): Set `OPENAI_API_KEY`
+- **Anthropic Claude**: Set `ANTHROPIC_API_KEY`
+- **Google Gemini**: Set `GOOGLE_API_KEY`
+- **Manual workflow**: Works with any AI tool (ChatGPT web, GitHub Copilot, etc.)
 
 ## Configuration
 
@@ -317,7 +369,26 @@ Options:
   -v, --version    Show version
   --config         Specify custom config file path
   --setup-aliases  Set up global aliases interactively
-  --ai             Enable AI-powered script analysis (coming soon)
+  --ai             Enable AI-powered script analysis and grouping
+```
+
+### AI Analysis
+
+Smart-run provides powerful AI integration for automatic script analysis:
+
+```bash
+# Automatic AI analysis (requires API key)
+smart-run --ai
+
+# First-time setup offers AI options automatically
+smart-run
+
+# AI analysis examples:
+export OPENAI_API_KEY="sk-..."
+srun --ai                    # Analyze with OpenAI
+
+export ANTHROPIC_API_KEY="sk-ant-..."
+sr --ai                      # Analyze with Claude
 ```
 
 ### Alias Management

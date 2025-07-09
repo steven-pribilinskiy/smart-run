@@ -10,16 +10,18 @@ async function postInstall(): Promise<void> {
   if (!process.env.npm_config_global) {
     return;
   }
-  
+
   console.log('\n🎉 Thank you for installing smart-run!\n');
-  
-  const { setupAliases } = await inquirer.prompt([{
-    type: 'confirm',
-    name: 'setupAliases',
-    message: 'Would you like to set up convenient aliases (srun, sr) for smart-run?',
-    default: true
-  }]);
-  
+
+  const { setupAliases } = await inquirer.prompt([
+    {
+      type: 'confirm',
+      name: 'setupAliases',
+      message: 'Would you like to set up convenient aliases (srun, sr) for smart-run?',
+      default: true,
+    },
+  ]);
+
   if (setupAliases) {
     const { setupGlobalAliases } = await import('./setup-aliases.js');
     await setupGlobalAliases();
@@ -29,7 +31,7 @@ async function postInstall(): Promise<void> {
     console.log('\n📚 Or check the documentation at:');
     console.log('   https://github.com/steven-pribilinskiy/smart-run#readme');
   }
-  
+
   console.log('\n🚀 Get started by running: smart-run');
   console.log('   Or if you set up aliases: srun\n');
 }
