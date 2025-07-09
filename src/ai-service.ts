@@ -1,11 +1,10 @@
-import OpenAI from 'openai';
 import clipboardy from 'clipboardy';
 import dotenv from 'dotenv';
+import OpenAI from 'openai';
 
-// Load environment variables
-dotenv.config();
+dotenv.config({ quiet: true });
 
-interface AIAnalysisResult {
+type AIAnalysisResult = {
   scriptGroups: Array<{
     name: string;
     scripts: Array<{
@@ -13,15 +12,19 @@ interface AIAnalysisResult {
       description: string;
     }>;
   }>;
-}
+};
 
 export class AIService {
   private openai: OpenAI | null = null;
   private apiKey: string | null = null;
 
   constructor() {
-    this.apiKey = process.env.OPENAI_API_KEY || process.env.ANTHROPIC_API_KEY || process.env.GOOGLE_API_KEY || null;
-    
+    this.apiKey =
+      process.env.OPENAI_API_KEY ||
+      process.env.ANTHROPIC_API_KEY ||
+      process.env.GOOGLE_API_KEY ||
+      null;
+
     if (this.apiKey && process.env.OPENAI_API_KEY) {
       this.openai = new OpenAI({
         apiKey: this.apiKey,
@@ -43,7 +46,9 @@ export class AIService {
 
   public async analyzeScripts(scripts: Record<string, string>): Promise<AIAnalysisResult> {
     if (!this.openai) {
-      throw new Error('OpenAI client not initialized. Please set OPENAI_API_KEY environment variable.');
+      throw new Error(
+        'OpenAI client not initialized. Please set OPENAI_API_KEY environment variable.'
+      );
     }
 
     const scriptEntries = Object.entries(scripts)
@@ -84,7 +89,8 @@ Guidelines:
         messages: [
           {
             role: 'system',
-            content: 'You are an expert developer assistant that helps organize and document npm scripts. Always respond with valid JSON only.',
+            content:
+              'You are an expert developer assistant that helps organize and document npm scripts. Always respond with valid JSON only.',
           },
           {
             role: 'user',
@@ -102,7 +108,7 @@ Guidelines:
 
       // Parse the JSON response
       const result = JSON.parse(content) as AIAnalysisResult;
-      
+
       // Validate the response structure
       if (!result.scriptGroups || !Array.isArray(result.scriptGroups)) {
         throw new Error('Invalid response format from AI service');
@@ -157,7 +163,7 @@ Guidelines:
   public async copyToClipboard(text: string): Promise<void> {
     try {
       await clipboardy.write(text);
-    } catch (error) {
+    } catch (_error) {
       throw new Error('Failed to copy to clipboard');
     }
   }

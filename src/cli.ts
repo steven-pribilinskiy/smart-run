@@ -1,60 +1,156 @@
 #!/usr/bin/env node
 
+import { readFileSync } from 'node:fs';
+import { Command } from 'commander';
 import { runSmartRun } from './index.js';
 
-const args = process.argv.slice(2);
+// Read package.json to get version and homepage
+function getPackageInfo() {
+  try {
+    // Try package.json first, then package.demo.json for demo directories
+    let packagePath = 'package.json';
+    if (!require('node:fs').existsSync(packagePath)) {
+      const demoPath = 'package.demo.json';
+      if (require('node:fs').existsSync(demoPath)) {
+        packagePath = demoPath;
+      }
+    }
+    const packageJson = JSON.parse(readFileSync(packagePath, 'utf-8'));
+    return {
+      version: packageJson.version || '1.0.0',
+      homepage: packageJson.homepage || 'https://github.com/steven-pribilinskiy/smart-run#readme',
+    };
+  } catch (_error) {
+    // Fallback values if reading fails
+    return {
+      version: '1.0.0',
+      homepage: 'https://github.com/steven-pribilinskiy/smart-run#readme',
+    };
+  }
+}
 
-// Handle help flag
-if (args.includes('--help') || args.includes('-h')) {
-  console.log(`
-smart-run v1.0.0
+const packageInfo = getPackageInfo();
 
-🚀 AI-powered interactive CLI for running package scripts with intelligent grouping
+const program = new Command();
 
-Usage:
-  smart-run [options]
-  srun [options]
-  sr [options]
+program
+  .name('smart-run')
+  .description(
+    '🚀 AI-powered interactive CLI for running package scripts with intelligent grouping'
+  )
+  .version(packageInfo.version)
+  .usage('[options] [command]')
+  .option('-c, --config <file>', 'Specify custom config file path')
+  .option('--preview-cmd', 'Show prettified command preview in interactive mode')
+  .option('--no-color', 'Disable colored output')
+  .action(async (options) => {
+    try {
+      await runSmartRun(options.config, {
+        previewCommand: options.previewCmd,
+        disableColors: options.noColor,
+      });
+    } catch (error) {
+      console.error('Error:', error instanceof Error ? error.message : 'Unknown error');
+      process.exit(1);
+    }
+  });
 
-Options:
-  -h, --help       Show this help message
-  -v, --version    Show version number
-  --config <file>  Specify custom config file path
-  --setup-aliases  Set up global aliases interactively
-  --ai             Enable AI-powered script analysis (coming soon)
+program
+  .command('setup-aliases')
+  .description('Set up global aliases interactively')
+  .action(async () => {
+    const { setupGlobalAliases } = await import('./setup-aliases.js');
+    await setupGlobalAliases();
+  });
+
+program
+  .command('ai')
+  .description('Enable AI-powered script analysis and grouping')
+  .option('--no-color', 'Disable colored output')
+  .action(async (options) => {
+    const { runAIAnalysis } = await import('./ai-analysis.js');
+    await runAIAnalysis({ disableColors: options.noColor });
+  });
+
+program
+  .command('migrate')
+  .description('Migrate existing configurations to smart-run format')
+  .action(async () => {
+    const { runMigration } = await import('./migration.js');
+    await runMigration();
+  });
+
+program
+  .command('preview')
+  .description('Show all scripts with enhanced formatting')
+  .option('--no-color', 'Disable colored output')
+  .action(async (options) => {
+    const { runPreview } = await import('./preview.js');
+    await runPreview({ disableColors: options.noColor });
+  });
+
+program
+  .command('lint')
+  .description('Lint smart-run configuration for best practices')
+  .argument('[directory]', 'Directory to lint (default: current directory)', '.')
+  .action(async (directory) => {
+    const { lintDirectory } = await import('./config-linter.js');
+    const passed = lintDirectory(directory);
+    process.exit(passed ? 0 : 1);
+  });
+
+program
+  .command('ls')
+  .description('List all scripts in a table format with detailed information')
+  .option('--json', 'Output as JSON instead of table')
+  .option('--no-colors', 'Disable colored output')
+  .action(async (options) => {
+    const { runListScripts } = await import('./list-scripts.js');
+    await runListScripts({
+      json: options.json,
+      disableColors: options.noColors,
+    });
+  });
+
+program
+  .command('hooks')
+  .description('Manage git hooks for configuration linting')
+  .argument('[command]', 'Hook command (install, uninstall, status, detect)')
+  .argument('[hooks...]', 'Hook types to manage (pre-commit, pre-push, commit-msg)')
+  .option('--force', 'Force overwrite existing hooks')
+  .action(async (command, hooks, options) => {
+    const { cli } = await import('./git-hooks.js');
+
+    // Set up process.argv for the git-hooks CLI
+    process.argv = ['node', 'git-hooks.js', command || 'help', ...hooks];
+    if (options.force) {
+      process.argv.push('--force');
+    }
+
+    cli();
+  });
+
+// Add examples and additional help
+program.addHelpText(
+  'after',
+  `
+Aliases:
+  srun, sr                     # Short aliases for smart-run
 
 Examples:
   smart-run                    # Interactive menu
-  srun --config my-config.yaml # Use custom config
-  sr                           # Ultra-short alias
-  smart-run --setup-aliases    # Configure global aliases
+  srun --config my-config.yaml # Use custom config with short alias
+  sr --preview-cmd             # Show command preview with ultra-short alias
+  smart-run --no-color         # Disable colored output
+  smart-run setup-aliases      # Configure global aliases
+  smart-run ai                 # AI analysis workflow
+  smart-run migrate            # Migrate existing configurations
+  smart-run preview            # Show all scripts with formatting
+  smart-run lint               # Lint configuration for best practices
+  smart-run hooks install      # Install git hooks for config linting
 
-For more information, visit: https://github.com/steven-pribilinskiy/smart-run
-`);
-  process.exit(0);
-}
+For more information, visit: ${packageInfo.homepage}
+`
+);
 
-// Handle version flag
-if (args.includes('--version') || args.includes('-v')) {
-  console.log('1.0.0');
-  process.exit(0);
-}
-
-// Handle alias setup
-if (args.includes('--setup-aliases')) {
-  const { setupGlobalAliases } = await import('./setup-aliases.js');
-  await setupGlobalAliases();
-  process.exit(0);
-}
-
-// Extract config path if provided
-let configPath: string | undefined;
-const configIndex = args.findIndex(arg => arg === '--config');
-if (configIndex !== -1 && args[configIndex + 1]) {
-  configPath = args[configIndex + 1];
-}
-
-runSmartRun(configPath).catch((error: Error) => {
-  console.error('Error:', error.message);
-  process.exit(1);
-});
+program.parse();

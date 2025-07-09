@@ -10,14 +10,13 @@
   },
   "type": "module",
   "scripts": {
+    "start": "node src/index.js",
     "build": "tsc",
-    "dev": "tsc --watch",
-    "test": "node --test",
-    "lint": "biome check --write",
-    "lint:check": "biome check",
+    "lint": "biome check --write --unsafe",
+    "test": "rstest run",
+    "postinstall": "node dist/postinstall.js || true",
     "prepare": "npm run build",
-    "prepublishOnly": "npm test && npm run lint:check",
-    "postinstall": "node dist/postinstall.js || true"
+    "demo": "node demo/demo-menu.js"
   },
   "keywords": [
     "cli",
@@ -49,25 +48,30 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "js-yaml": "^4.1.0",
-    "inquirer": "^12.7.0",
-    "openai": "^4.20.0",
     "clipboardy": "^4.0.0",
-    "dotenv": "^16.3.0"
+    "commander": "^14.0.0",
+    "dotenv": "^17.2.0",
+    "inquirer": "^12.7.0",
+    "inquirer-autocomplete-standalone": "^0.8.1",
+    "js-yaml": "^4.1.0",
+    "openai": "^5.8.3",
+    "shiny-command-line": "^1.0.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.1.1",
+    "@rstest/core": "^0.0.6",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.3",
+    "@semantic-release/npm": "^12.0.2",
+    "@semantic-release/release-notes-generator": "^14.0.3",
+    "@types/commander": "^2.12.0",
+    "@types/inquirer": "^9.0.8",
     "@types/js-yaml": "^4.0.9",
-    "@types/node": "^20.0.0",
-    "@types/inquirer": "^9.0.7",
-    "@biomejs/biome": "^2.0.0",
-    "typescript": "^5.0.0",
-    "semantic-release": "^22.0.0",
-    "@semantic-release/changelog": "^6.0.0",
-    "@semantic-release/commit-analyzer": "^11.0.0",
-    "@semantic-release/git": "^10.0.0",
-    "@semantic-release/github": "^9.0.0",
-    "@semantic-release/npm": "^11.0.0",
-    "@semantic-release/release-notes-generator": "^12.0.0"
+    "@types/node": "^24.0.12",
+    "semantic-release": "^24.2.6",
+    "typescript": "^5.8.3"
   },
   "files": [
     "dist",
