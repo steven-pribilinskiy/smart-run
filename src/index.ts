@@ -943,11 +943,11 @@ export async function runSmartRun(
 
   if (options.previewCommand) {
     console.log('📋 Available Scripts (preview)');
-    choices.forEach((c) => {
-      if (typeof c === 'string') {
-        console.log(String(c).trim());
-      } else if (typeof c === 'object' && c !== null && 'name' in c) {
-        console.log(String((c as Choice).name).trim());
+    choices.forEach((choice) => {
+      if (typeof choice === 'string') {
+        console.log(String(choice).trim());
+      } else if (typeof choice === 'object' && choice !== null && 'name' in choice) {
+        console.log(String((choice as Choice).name).trim());
       }
     });
     console.log();

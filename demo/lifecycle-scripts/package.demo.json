@@ -1,0 +1,37 @@
+{
+  "name": "lifecycle-scripts-demo",
+  "version": "1.0.0",
+  "description": "Demo showing lifecycle scripts in smart-run",
+  "scripts": {
+    "preinstall": "echo 'Running pre-install checks...'",
+    "install": "echo 'Installing dependencies...'",
+    "postinstall": "echo 'Post-install setup complete'",
+    "prestart": "echo 'Preparing to start...'",
+    "start": "node server.js",
+    "poststart": "echo 'Server started successfully'",
+    "pretest": "echo 'Setting up test environment...'",
+    "test": "jest",
+    "posttest": "echo 'Test cleanup complete'",
+    "prebuild": "echo 'Cleaning build directory...'",
+    "build": "webpack --mode production",
+    "postbuild": "echo 'Build artifacts ready'",
+    "preversion": "npm test",
+    "version": "git add -A",
+    "postversion": "git push && git push --tags",
+    "prepublish": "npm run build",
+    "prepare": "husky install",
+    "prepack": "npm run build",
+    "postpack": "echo 'Package ready for distribution'",
+    "dev": "webpack serve --mode development",
+    "lint": "eslint src/",
+    "clean": "rm -rf dist/"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "webpack": "^5.0.0",
+    "webpack-cli": "^4.0.0",
+    "webpack-dev-server": "^4.0.0",
+    "eslint": "^8.0.0",
+    "husky": "^8.0.0"
+  }
+}

@@ -1,0 +1,51 @@
+# Smart-run native configuration demo
+scriptGroups:
+  - name: "�️ Development"
+    scripts:
+      - key: start
+        description: "Start the development server with hot reload"
+      - key: build
+        description: "Build the project for production"
+      - key: build:analyze
+        description: "Build and analyze bundle size"
+
+  - name: "🧪 Testing"
+    scripts:
+      - key: test
+        description: "Run all tests with Jest"
+      - key: test:watch
+        description: "Run tests in watch mode for development"
+      - key: test:coverage
+        description: "Run tests and generate coverage report"
+
+  - name: "✨ Code Quality"
+    scripts:
+      - key: lint
+        description: "Lint source code with ESLint"
+      - key: lint:fix
+        description: "Lint source code and automatically fix issues"
+      - key: format
+        description: "Format code using Prettier"
+      - key: typecheck
+        description: "Type check the codebase with TypeScript"
+
+  - name: "🚀 Deployment"
+    scripts:
+      - key: deploy
+        description: "Deploy the application to production"
+      - key: deploy:staging
+        description: "Deploy to staging environment for testing"
+
+  - name: "📚 Documentation & Security"
+    scripts:
+      - key: docs:build
+        description: "Build the documentation site"
+      - key: docs:serve
+        description: "Serve documentation locally for development"
+
+  - name: "🧹 Maintenance"
+    scripts:
+      - key: clean
+        description: "Remove build artifacts and temporary files"
+      - key: deps:update
+        description: "Update project dependencies to latest versions" 
