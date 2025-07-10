@@ -1,92 +1,46 @@
 # smart-run
 
-🚀 AI-powered interactive CLI for running package scripts with intelligent grouping and descriptions
+🚀 AI-powered interactive CLI for running package scripts with intelligent organization and descriptions
 
 [![npm version](https://badge.fury.io/js/smart-run.svg)](https://www.npmjs.com/package/smart-run)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Features
 
-- 🧠 **AI-Powered**: Automatic script analysis and intelligent grouping with OpenAI, Claude, or Gemini
+- 🧠 **AI-Powered**: Automatic script analysis and intelligent grouping using an LLM
 - 📋 **Interactive Menu**: Beautiful CLI interface for selecting scripts
-- 🏷️ **Multiple Configuration Methods**: Support for package-meta.yaml, npm-scripts organization, and ntl descriptions
+- 🏷️ **Flexible Configuration**: Works with existing setups and multiple configuration formats
 - 📝 **Rich Descriptions**: Add meaningful descriptions to your scripts
-- 🔍 **Missing Script Detection**: Shows scripts defined in metadata but missing from package.json
+- 🔍 **Smart Script Detection**: Highlights missing scripts, ungrouped items, and scripts without descriptions
+- 📦 **Automatic Package Manager Detection**: Intelligently detects npm, pnpm, bun, yarn, and other package managers
 - ⚡ **Universal**: Works with npm, pnpm, bun, yarn, and any package manager
-- 🎨 **Colorized Output**: Visual indicators for different script states
-- 🔄 **Smart Fallbacks**: Automatically detects best configuration method
-- ⚡ **Multiple Aliases**: Use `smart-run`, `srun`, or `sr` - whatever feels natural
-- 📋 **Manual AI Workflow**: Generate prompts for external AI tools when API keys aren't available
+- 🎨 **Multiple Aliases**: Use `smart-run`, `srun`, or `sr` for quick access
 
 ## Installation
 
-Install globally for use across all projects:
-
 ```bash
+# Install globally
 npm install -g smart-run
-```
 
-Or run directly with npx:
-
-```bash
+# Or run directly
 npx smart-run
 ```
 
-### Global Aliases
+### Aliases
 
-After installation, you can use any of these commands:
+After installation, use any of these commands:
 - `smart-run` - Full command name
-- `srun` - Short and sweet
-- `sr` - Ultra-minimal for speed demons
+- `srun` - Short alias
+- `sr` - Ultra-short alias
 
-All aliases work identically!
-
-#### Setting Up Aliases
-
-**Automatic Setup (Recommended):**
-When installing globally, smart-run will automatically offer to set up aliases for you.
-
-**Manual Setup:**
+Set up aliases automatically during installation, or manually with:
 ```bash
 smart-run --setup-aliases
 ```
 
-This interactive setup will:
-- ✅ Detect your shell configuration (.bashrc, .zshrc, etc.)
-- ✅ Check if smart-run is globally installed
-- ✅ Let you choose which aliases to create
-- ✅ Safely avoid conflicts with existing aliases
-- ✅ Support multiple shell configurations
-
-**Available Aliases:**
-- `srun` - Most popular short alias
-- `sr` - Ultra-short for power users
-- `run` - Simple and descriptive
-- `menu` - Descriptive alternative
-
-After setup, restart your terminal or run `source ~/.bashrc` (or your shell config) to use the new aliases.
-
 ## Quick Start
 
-1. Create a `package-meta.yaml` file in your project root:
-
-```yaml
-scriptGroups:
-  - name: "Development"
-    scripts:
-      - key: start
-        description: "Start the development server"
-      - key: build
-        description: "Build the project for production"
-  - name: "Testing"
-    scripts:
-      - key: test
-        description: "Run all tests"
-      - key: test:watch
-        description: "Run tests in watch mode"
-```
-
-2. Run the menu:
+1. **Just run it** - smart-run works with any existing package.json:
 
 ```bash
 smart-run
@@ -96,326 +50,86 @@ srun
 sr
 ```
 
-3. Select and run your scripts interactively!
-
-## AI-Powered Script Analysis
-
-Smart-run can automatically analyze your npm scripts and generate intelligent configurations using AI.
-
-### Automatic AI Analysis
-
-If you have an API key configured, smart-run can automatically analyze and categorize your scripts:
-
-```bash
-# Set up your API key (choose one)
-export OPENAI_API_KEY="your-openai-key"
-export ANTHROPIC_API_KEY="your-claude-key" 
-export GOOGLE_API_KEY="your-gemini-key"
-
-# Run AI analysis
-smart-run --ai
-```
-
-The AI will:
-- ✅ Analyze all your npm scripts
-- ✅ Group them by purpose (Development, Testing, Build, etc.)
-- ✅ Generate clear, helpful descriptions
-- ✅ Create a ready-to-use package-meta.yaml configuration
-- ✅ Offer to save or copy the result
-
-### Manual AI Workflow
-
-No API key? No problem! Smart-run can generate prompts for any AI tool:
-
-```bash
-smart-run --ai
-# Choose "Manual Prompt" option
-# Copy the generated prompt to ChatGPT, Claude, or any AI tool
-# Get your configuration and save it as package-meta.yaml
-```
-
-### First-Time Setup
-
-When you run smart-run on a project without configuration, it will automatically offer:
-- 🧠 AI analysis (if API keys are available)
-- 📝 Manual prompt generation
-- 📄 Basic example configuration
-- ⏭️ Continue without configuration
-
-### Supported AI Providers
-
-- **OpenAI** (GPT-3.5/GPT-4): Set `OPENAI_API_KEY`
-- **Anthropic Claude**: Set `ANTHROPIC_API_KEY`
-- **Google Gemini**: Set `GOOGLE_API_KEY`
-- **Manual workflow**: Works with any AI tool (ChatGPT web, GitHub Copilot, etc.)
-
-## Configuration
-
-smart-run supports multiple configuration methods, automatically selecting the best one available:
-
-### 1. package-meta.yaml (Recommended)
-
-The most flexible method with full control over grouping and descriptions:
+2. **Optional**: Create a `package-meta.yaml` for organized script groups:
 
 ```yaml
 scriptGroups:
-  - name: "Build & Development"
+  - name: "Development"
     scripts:
       - key: start
-        description: "Start development server"
+        description: "Start the development server"
       - key: build
-        description: "Build for production"
-      - key: dev
-        description: "Development mode with hot reload"
-        
-  - name: "Quality Assurance"
-    scripts:
-      - key: test
-        description: "Run test suite"
-      - key: lint
-        description: "Lint code and fix issues"
-      - key: type-check
-        description: "Run TypeScript type checking"
-        
-  - name: "Deployment"
-    scripts:
-      - key: deploy
-        description: "Deploy to production"
-      - key: deploy:staging
-        description: "Deploy to staging environment"
+        description: "Build the project for production"
 ```
 
-### 2. NPM Scripts Organization Pattern
+3. Select and run your scripts interactively!
 
-Organize scripts directly in your `package.json` using category headers (inspired by [this article](https://dev.to/ycmjason/how-to-organise-npm-scripts-4d2m)):
+## AI-Powered Analysis
 
-```json
-{
-  "scripts": {
-    "test": "jest",
-    "build": "webpack",
-    "\n# DEVELOPMENT SCRIPTS:": "",
-    "start": "webpack serve",
-    "dev": "webpack serve --mode development",
-    "dev:watch": "webpack serve --mode development --watch",
-    "\n# TESTING SCRIPTS:": "",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "lint": "eslint src/",
-    "\n# BUILD SCRIPTS:": "",
-    "build:prod": "webpack --mode production",
-    "build:analyze": "webpack-bundle-analyzer dist/stats.json"
-  }
-}
+Smart-run can automatically analyze your scripts and generate intelligent configurations. See the [AI Analysis Guide](./docs/ai-analysis.md) for detailed information.
+
+```bash
+# Quick start with AI analysis
+smart-run ai
 ```
 
-Category headers start with `\n#` and have empty string values. They create visual groups in both `npm run` output and smart-run.
+## Configuration
 
-### 3. NTL Descriptions
+Smart-run works with your existing setup and supports multiple configuration formats:
 
-Use the [ntl](https://github.com/ruyadorno/ntl) format for script descriptions in `package.json`:
+- **package-meta.yaml** - Native format (recommended)
+- **npm-scripts organization** - Category headers in package.json
+- **ntl descriptions** - Compatible with existing ntl setups
+- **npm-scripts-info** - Compatible with scripts-info field and ? prefixed scripts
+- **better-scripts** - Compatible with better-scripts configuration formats
 
-```json
-{
-  "scripts": {
-    "start": "webpack serve",
-    "build": "webpack --mode production",
-    "test": "jest",
-    "lint": "eslint src/"
-  },
-  "ntl": {
-    "descriptions": {
-      "start": "Start the development server",
-      "build": "Build the project for production",
-      "test": "Run all tests with Jest",
-      "lint": "Lint source code with ESLint"
-    },
-    "runner": "yarn"
-  },
-  "packageManager": "yarn@3.2.1"
-}
-```
-
-### Package Manager Detection
-
-smart-run automatically detects your package manager using multiple sources in priority order:
-
-1. **ntl.runner** - Per-project runner configuration in package.json `ntl.runner` field
-2. **packageManager** - Standard `packageManager` field in package.json (npm/yarn/pnpm standard)
-3. **Lock files** - Automatic detection based on lock files (pnpm-lock.yaml, bun.lockb, yarn.lock)
-4. **Environment variable** - `NTL_RUNNER` environment variable (for ntl compatibility)
-5. **Default fallback** - npm as the default package manager
-
-Examples:
-```json
-{
-  "packageManager": "pnpm@8.0.0",
-  "ntl": {
-    "runner": "yarn",
-    "descriptions": { "start": "Start dev server" }
-  }
-}
-```
-
-The detected package manager will be shown in the output:
-```
-📦 Detected package manager: yarn
-   (configured via ntl.runner)
-```
-
-### 4. Auto-Generated from Scripts
-
-If no configuration is found, smart-run will display all scripts with their commands as descriptions.
-
-### Configuration Priority
-
-smart-run uses this priority order:
-
-1. **package-meta.yaml** - Full control with grouping and descriptions
-2. **npm-scripts organization** - Category headers in package.json scripts
-3. **ntl descriptions** - Description metadata in package.json
-4. **Raw scripts** - Direct script commands as descriptions
-
-### Mixed Configurations
-
-You can combine methods! For example:
-- Use npm-scripts organization for categories
-- Add ntl descriptions for better script descriptions
-- smart-run will use the categories from npm-scripts and descriptions from ntl
-
-### Menu Features
-
-- **Grouped Display**: Scripts are organized by the groups you define
-- **Missing Scripts**: Scripts in metadata but not in package.json are marked as `(MISSING)`
-- **Extra Scripts**: Scripts in package.json but not in metadata appear in "Other Available Scripts"
-- **Interactive Selection**: Use arrow keys to navigate, Enter to select
-
-## Package Manager Support
-
-Works seamlessly with:
-- **npm**: `npm run <script>`
-- **pnpm**: `pnpm run <script>`
-- **bun**: `bun run <script>`
-- **yarn**: `yarn <script>`
-
-The tool automatically detects your package manager and uses the appropriate command.
-
-## Example Output
-
-### With package-meta.yaml configuration:
-```
-📦 Detected package manager: npm
-📋 Using package-meta.yaml configuration
-
-? Select an operation to run: (Use arrow keys)
-❯ Development
-  [start] Start development server
-  [build] Build for production
-  [dev] Development mode with hot reload
-  
-  Quality Assurance
-  [test] Run test suite
-  [lint] Lint code and fix issues
-  [type-check] Run TypeScript type checking (MISSING)
-  
-  Other Available Scripts
-  [prepare] husky install
-  [postinstall] patch-package
-  
-  Exit
-```
-
-### With npm-scripts organization:
-```
-📦 Detected package manager: pnpm
-📋 Using npm-scripts organization pattern
-
-? Select an operation to run: (Use arrow keys)
-❯ DEVELOPMENT SCRIPTS
-  [start] Start the development server
-  [dev] Run in development mode
-  [dev:watch] Development with file watching
-  
-  TESTING SCRIPTS
-  [test] Run all tests with Jest
-  [test:watch] Run tests in watch mode
-  [lint] Lint source code with ESLint
-  
-  Exit
-```
-
-### With ntl descriptions:
-```
-📦 Detected package manager: yarn
-📋 Using ntl descriptions
-
-? Select an operation to run: (Use arrow keys)
-❯ Available Scripts
-  [start] Start the development server
-  [build] Build the project for production
-  [test] Run all tests with Jest
-  [lint] Lint source code with ESLint
-  
-  Exit
-```
+The system automatically detects your package manager (npm, pnpm, bun, yarn) and configuration format. See the [Configuration Formats Guide](./docs/configuration-formats.md) for detailed setup options and the [Package Manager Detection Guide](./docs/package-manager-detection.md) for package manager detection details.
 
 ## CLI Options
 
 ```bash
-smart-run [options]
+smart-run [options] [command]
 
 Options:
-  -h, --help       Show help
-  -v, --version    Show version
-  --config         Specify custom config file path
-  --setup-aliases  Set up global aliases interactively
-  --ai             Enable AI-powered script analysis and grouping
+  -c, --config <file>  Specify custom config file path
+  --preview-cmd        Show prettified command preview
+  --no-color          Disable colored output
+  -h, --help          Show help
+  -v, --version       Show version
+
+Commands:
+  ai                  AI-powered script analysis and grouping
+  setup-aliases       Set up global aliases interactively
+  migrate            Migrate existing configurations
+  preview            Show all scripts with enhanced formatting
+
+Examples:
+  smart-run                    # Interactive menu
+  srun --config my-config.yaml # Use custom config
+  sr --preview-cmd             # Show command preview
+  smart-run ai                 # AI analysis workflow
 ```
 
-### AI Analysis
+## Configuration Setup
 
-Smart-run provides powerful AI integration for automatic script analysis:
+If no configuration is found, smart-run offers several setup options:
 
-```bash
-# Automatic AI analysis (requires API key)
-smart-run --ai
+- **🧠 AI Analysis** - Auto-generate configuration with intelligent grouping
+- **📝 Manual Setup** - Generate prompt for external AI tools
+- **📄 Create Example** - Create basic example configuration
+- **⏭️ Continue** - Use scripts without configuration
 
-# First-time setup offers AI options automatically
-smart-run
+## Documentation
 
-# AI analysis examples:
-export OPENAI_API_KEY="sk-..."
-srun --ai                    # Analyze with OpenAI
+For detailed information about configuration and usage:
 
-export ANTHROPIC_API_KEY="sk-ant-..."
-sr --ai                      # Analyze with Claude
-```
-
-### Alias Management
-
-Smart-run provides a comprehensive alias system for faster access:
-
-```bash
-# Set up aliases interactively
-smart-run --setup-aliases
-
-# After setup, use any alias:
-srun              # Short alias
-sr                # Ultra-short alias  
-smart-run         # Full command name
-```
-
-## Why smart-run?
-
-- **AI-Enhanced**: Future AI integration for automatic script categorization and insights
-- **Better DX**: No more remembering complex script names
-- **Multiple Config Methods**: Choose the approach that fits your workflow
-- **Self-Documenting**: Descriptions make scripts discoverable
-- **Team Friendly**: New team members can see all available commands
-- **Organized**: Group related scripts together
-- **Universal**: Works with any package manager or project setup
-- **Compatible**: Works with existing ntl and npm-scripts organization patterns
-- **Fast Access**: Multiple aliases (`smart-run`, `srun`, `sr`) for quick access
+- **[AI Analysis Guide](./docs/ai-analysis.md)** - Complete guide to AI-powered script analysis and configuration generation
+- **[Architecture Overview](./docs/architecture.md)** - High-level overview of the current project architecture
+- **[Configuration Formats](./docs/configuration-formats.md)** - Complete guide to all supported configuration methods
+- **[Package Manager Detection](./docs/package-manager-detection.md)** - How smart-run detects and works with different package managers
+- **[Migration Guide](./docs/migration-guide.md)** - Step-by-step instructions for migrating from other tools  
+- **[Supported Packages](./docs/supported-packages.md)** - Package compatibility and recommendations
+- **[Example Output](./docs/example-output.md)** - Sample interactive menus under various configurations
 
 ## License
 
