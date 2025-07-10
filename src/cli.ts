@@ -33,6 +33,17 @@ const packageInfo = getPackageInfo();
 
 const program = new Command();
 
+// Enable colors for help output
+program.configureHelp({
+  styleTitle: (str) => `\x1b[1m\x1b[32m${str}\x1b[0m`, // Bold green
+  styleCommandText: (str) => `\x1b[36m${str}\x1b[0m`, // Cyan
+  styleCommandDescription: (str) => `\x1b[37m${str}\x1b[0m`, // White
+  styleOptionText: (str) => `\x1b[33m${str}\x1b[0m`, // Yellow
+  styleOptionDescription: (str) => `\x1b[37m${str}\x1b[0m`, // White
+  styleSubcommandText: (str) => `\x1b[36m${str}\x1b[0m`, // Cyan
+  styleSubcommandDescription: (str) => `\x1b[37m${str}\x1b[0m`, // White
+});
+
 program
   .name('smart-run')
   .description(
@@ -45,6 +56,10 @@ program
   .option('--no-color', 'Disable colored output')
   .action(async (options) => {
     try {
+      // Handle first-run setup for global installations
+      const { handleFirstRunSetup } = await import('./first-run-setup.js');
+      await handleFirstRunSetup();
+
       await runSmartRun(options.config, {
         previewCommand: options.previewCmd,
         disableColors: options.noColor,
@@ -137,17 +152,16 @@ program.addHelpText(
 Aliases:
   srun, sr                     # Short aliases for smart-run
 
-Examples:
-  smart-run                    # Interactive menu
-  srun --config my-config.yaml # Use custom config with short alias
-  sr --preview-cmd             # Show command preview with ultra-short alias
-  smart-run --no-color         # Disable colored output
-  smart-run setup-aliases      # Configure global aliases
-  smart-run ai                 # AI analysis workflow
-  smart-run migrate            # Migrate existing configurations
-  smart-run preview            # Show all scripts with formatting
-  smart-run lint               # Lint configuration for best practices
-  smart-run hooks install      # Install git hooks for config linting
+Common Workflows:
+  smart-run                    # Start interactive script menu
+  srun --preview-cmd           # Quick access with command preview
+  smart-run ai && srun         # AI-organize scripts, then run
+  smart-run migrate            # One-time: migrate from npm-scripts-info
+  
+Development Integration:
+  smart-run hooks install      # Enable config linting in git hooks
+  smart-run lint               # Check configuration for best practices
+  smart-run preview --json | jq  # Script analysis via JSON output
 
 For more information, visit: ${packageInfo.homepage}
 `

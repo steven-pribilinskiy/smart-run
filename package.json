@@ -14,8 +14,7 @@
     "build": "tsc",
     "lint": "biome check --write --unsafe",
     "test": "rstest run",
-    "postinstall": "node dist/postinstall.js || true",
-    "prepare": "npm run build",
+    "typecheck": "tsc --project tsconfig.test.json",
     "demo": "node demo/demo-menu.js"
   },
   "keywords": [
