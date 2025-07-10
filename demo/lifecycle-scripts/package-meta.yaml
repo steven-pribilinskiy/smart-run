@@ -1,0 +1,19 @@
+# Smart-run configuration with lifecycle scripts enabled
+includeLifecycleScripts: true
+
+scriptGroups:
+  - name: "Development"
+    scripts:
+      - key: "dev"
+        description: "🚀 Start development server with hot reload"
+      - key: "build"
+        description: "🏗️ Build project for production"
+      - key: "test"
+        description: "🧪 Run test suite"
+      - key: "lint"
+        description: "🔍 Check code quality with ESLint"
+
+  - name: "Maintenance"
+    scripts:
+      - key: "clean"
+        description: "🧹 Clean build artifacts" 

@@ -1,0 +1,83 @@
+# Smart-run enhanced configuration demo with titles and emojis
+scriptGroups:
+  - name: "🚀 Development"
+    scripts:
+      - key: start
+        description: "Start the development server with hot reload, source maps, and detailed debugging with polling enabled"
+        title: "Dev Server"
+        emoji: "🚀"
+      - key: build
+        description: "Build the project for production deployment with optimization, bundle analysis, and webpack stats generation"
+        title: "Production Build"
+        emoji: "🏗️"
+      - key: storybook
+        description: "Start Storybook development server with all addons enabled for component development and documentation"
+        title: "Storybook"
+        emoji: "📖"
+
+  - name: "🧪 Testing"
+    scripts:
+      - key: test
+        description: "Run comprehensive test suite with coverage reports, CI optimizations, and parallel execution"
+        title: "Test Suite"
+        emoji: "🧪"
+      - key: test:watch
+        description: "Run tests in watch mode for development with coverage, notifications, and change detection"
+        title: "Test Watcher"
+        emoji: "👀"
+      - key: e2e
+        description: "Run end-to-end tests with Cypress in CI mode with parallel execution, recording, and detailed reporting"
+        title: "E2E Tests"
+        emoji: "🎭"
+
+  - name: "✨ Code Quality"
+    scripts:
+      - key: lint
+        description: "Lint source code with ESLint using caching, auto-fix, and unused disable directive reporting"
+        title: "Linter"
+        emoji: "🔍"
+      - key: format
+        description: "Format code using Prettier and fix CSS/SCSS with Stylelint including caching and verbose output"
+        title: "Code Formatter"
+        emoji: "✨"
+      - key: typecheck
+        description: "Type check the codebase with TypeScript using strict mode, incremental compilation, and caching"
+        title: "Type Checker"
+        emoji: "📝"
+
+  - name: "🚀 Deployment"
+    scripts:
+      - key: deploy
+        description: "Build and deploy the application to AWS S3 with CloudFront invalidation and Slack notification"
+        title: "AWS Deploy"
+        emoji: "🚀"
+      - key: docker:build
+        description: "Build Docker image with build arguments, version labels, and production optimizations"
+        title: "Docker Build"
+        emoji: "🐳"
+      - key: docker:run
+        description: "Run Docker container with health checks, resource limits, and production environment configuration"
+        title: "Docker Run"
+        emoji: "🏃"
+
+  - name: "📚 Documentation & Security"
+    scripts:
+      - key: docs
+        description: "Generate comprehensive project documentation with TypeDoc including markdown support and missing exports"
+        title: "Documentation"
+        emoji: "📚"
+      - key: security
+        description: "Run comprehensive security audit with npm audit, Snyk, Bandit, and Safety checks with JSON reports"
+        title: "Security Audit"
+        emoji: "🔒"
+      - key: performance
+        description: "Run comprehensive performance audit with Lighthouse including desktop simulation and performance budget validation"
+        title: "Performance Audit"
+        emoji: "⚡"
+
+  - name: "🧹 Maintenance"
+    scripts:
+      - key: clean
+        description: "Remove build artifacts, caches, and Docker volumes with force cleanup and cache clearing"
+        title: "Deep Clean"
+        emoji: "🧹" 

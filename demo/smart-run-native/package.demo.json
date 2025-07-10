@@ -1,0 +1,31 @@
+{
+  "name": "smart-run-native-demo",
+  "version": "1.0.0",
+  "description": "Demo of smart-run with native configuration (package-meta.yaml)",
+  "scripts": {
+    "start": "cross-env NODE_ENV=development BABEL_ENV=development webpack serve --config webpack.dev.js --hot --open --port 3000 --host 0.0.0.0 --history-api-fallback --overlay --stats detailed --devtool eval-source-map",
+    "build": "cross-env NODE_ENV=production BABEL_ENV=production webpack --config webpack.prod.js --mode production --optimization-minimize --optimization-concatenate-modules --optimization-tree-shaking --output-path ./dist --progress --colors",
+    "test": "cross-env NODE_ENV=test jest --config jest.config.js --coverage --coverageDirectory=coverage --coverageReporters=text-lcov --coverageReporters=html --coverageThreshold='{\"global\":{\"branches\":80,\"functions\":80,\"lines\":80,\"statements\":80}}' --watchAll=false --ci --forceExit --detectOpenHandles",
+    "test:watch": "cross-env NODE_ENV=test jest --config jest.config.js --watch --coverage --coverageDirectory=coverage --coverageReporters=text --notify --onlyChanged --changedSince=HEAD",
+    "test:coverage": "cross-env NODE_ENV=test jest --config jest.config.js --coverage --coverageDirectory=coverage --coverageReporters=text-lcov --coverageReporters=html --coverageThreshold='{\"global\":{\"branches\":80,\"functions\":80,\"lines\":80,\"statements\":80}}' --watchAll=false --ci",
+    "lint": "eslint src/**/*.{js,jsx,ts,tsx} --config .eslintrc.js --cache --cache-location node_modules/.cache/eslint --fix --format stylish --max-warnings 0 --ignore-path .eslintignore",
+    "lint:fix": "eslint src/**/*.{js,jsx,ts,tsx} --config .eslintrc.js --cache --cache-location node_modules/.cache/eslint --fix --format stylish --max-warnings 0 --ignore-path .eslintignore",
+    "format": "prettier --config .prettierrc --ignore-path .prettierignore --write 'src/**/*.{js,jsx,ts,tsx,json,css,scss,md}' && stylelint 'src/**/*.{css,scss}' --config .stylelintrc.js --fix",
+    "typecheck": "tsc --noEmit --project tsconfig.json --skipLibCheck false --strict --exactOptionalPropertyTypes --noImplicitReturns --noFallthroughCasesInSwitch --noUncheckedIndexedAccess",
+    "deploy": "npm run build && aws s3 sync ./dist s3://my-app-bucket --delete --cache-control max-age=31536000 --exclude '*.html' && aws s3 sync ./dist s3://my-app-bucket --delete --cache-control max-age=0 --include '*.html' && aws cloudfront create-invalidation --distribution-id E1234567890123 --paths '/*'",
+    "deploy:staging": "npm run build && aws s3 sync ./dist s3://my-app-staging-bucket --delete --cache-control max-age=31536000 --exclude '*.html' && aws s3 sync ./dist s3://my-app-staging-bucket --delete --cache-control max-age=0 --include '*.html'",
+    "docs": "typedoc --out docs --target ES6 --theme minimal --mode file --exclude '**/node_modules/**' --exclude '**/*.test.ts' --exclude '**/*.spec.ts' --includeDeclarations --excludeExternals --readme README.md",
+    "docs:build": "npm run docs",
+    "docs:serve": "serve -s docs",
+    "clean": "rimraf dist coverage .nyc_output node_modules/.cache .eslintcache .stylelintcache && npm cache clean --force",
+    "docker:build": "docker build -t my-app:latest --build-arg NODE_ENV=production --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') --build-arg VCS_REF=$(git rev-parse --short HEAD) --no-cache .",
+    "security": "npm audit --audit-level moderate && snyk test --severity-threshold=medium --dev && bandit -r src/ -f json -o security-report.json",
+    "performance": "lighthouse http://localhost:3000 --output json --output html --output-path ./reports/lighthouse --chrome-flags='--headless --no-sandbox --disable-gpu' --preset=desktop --budget-path=budget.json",
+    "e2e": "cypress run --config baseUrl=http://localhost:3000 --browser chrome --headless --record --key $CYPRESS_RECORD_KEY --parallel --ci-build-id $CI_BUILD_ID --group 'UI Tests' --spec 'cypress/integration/**/*.spec.js'",
+    "build:analyze": "cross-env NODE_ENV=production BABEL_ENV=production webpack --config webpack.prod.js --mode production --profile --json > stats.json && webpack-bundle-analyzer stats.json",
+    "deps:update": "npm update && npm audit fix"
+  },
+  "keywords": ["demo", "smart-run", "native-config"],
+  "author": "smart-run",
+  "license": "MIT"
+}
