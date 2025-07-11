@@ -9,6 +9,8 @@ smart-run supports multiple configuration formats to provide maximum flexibility
 The native smart-run format provides the most control and flexibility:
 
 ```yaml
+# Include schema reference for IDE validation
+$schema: "https://raw.githubusercontent.com/steven-pribilinskiy/smart-run/main/schema.json"
 scriptGroups:
   - name: "Development"
     scripts:
@@ -28,6 +30,8 @@ scriptGroups:
       - key: type-check
         description: "Run TypeScript type checking"
 ```
+
+The `$schema` property provides IDE validation using JSON Schema, which enables autocomplete, documentation, and validation features in most modern editors.
 
 ### 2. package-meta.json
 

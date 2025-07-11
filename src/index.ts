@@ -471,16 +471,22 @@ async function offerConfigurationSetup(
 
   const choices = [];
 
+  // Always show AI Analysis option
   if (providers.length > 0) {
     choices.push({
       name: `🧠 AI Analysis - Auto-generate configuration (${providers.join(', ')})`,
+      value: 'ai',
+    });
+  } else {
+    choices.push({
+      name: '🧠 AI Analysis - Auto-generate configuration (requires API key)',
       value: 'ai',
     });
   }
 
   choices.push(
     { name: '📝 Manual Setup - Generate prompt for external AI tools', value: 'manual' },
-    { name: '📄 Create Example - Create basic example configuration', value: 'example' },
+    { name: '📋 Generate Config - Create config from package.json scripts', value: 'generate' },
     { name: '⏭️  Continue - Use scripts without configuration', value: 'continue' }
   );
 
@@ -512,7 +518,7 @@ async function offerConfigurationSetup(
         console.log('   3. Save the result as package-meta.yaml');
         console.log('   4. Run smart-run again');
       } catch {
-        console.log('📄 Analysis prompt:');
+        console.log('📔 Analysis prompt:');
         console.log('─'.repeat(50));
         console.log(prompt);
         console.log('─'.repeat(50));
@@ -520,46 +526,47 @@ async function offerConfigurationSetup(
       return true; // Exit after manual setup
     }
 
-    case 'example': {
+    case 'generate': {
       const metaPath = path.resolve(process.cwd(), 'package-meta.yaml');
-      createExampleConfig(metaPath);
-      console.log('\n✅ Example configuration created!');
-      console.log('📝 Edit package-meta.yaml to customize your script groups.');
+      generateConfigFromPackageJson(metaPath);
+      console.log('\n✅ Configuration generated from package.json!');
+      console.log('📝 Edit package-meta.yaml to add descriptions and organize into groups.');
       console.log('🚀 Run smart-run again to use the configuration.');
-      return true; // Exit after creating example
+      return true; // Exit after generating config
     }
 
     case 'continue':
       console.log('⏭️  Continuing without configuration...\n');
+      console.log('📝 You can create a package-meta.yaml configuration file to organize your scripts.');
+      console.log('🚀 Run smart-run again to use the configuration.');
       return false; // Continue with current flow
   }
 
   return false;
 }
-function createExampleConfig(metaPath: string): void {
-  const exampleConfig = `# Smart-run configuration
+function generateConfigFromPackageJson(metaPath: string): void {
+  const scripts = _getNpmScripts();
+  const scriptKeys = Object.keys(scripts);
+  
+  if (scriptKeys.length === 0) {
+    console.log('⚠️  No scripts found in package.json');
+    return;
+  }
+
+  const configScripts = scriptKeys.map(key => `      - key: ${key}
+        description: ""`).join('\n');
+  
+  const config = `# Smart-run configuration
+# Generated from package.json scripts
+$schema: "https://raw.githubusercontent.com/steven-pribilinskiy/smart-run/main/schema.json"
 scriptGroups:
-  - name: "Development"
+  - name: "Scripts"
     scripts:
-      - key: start
-        description: "Start development server"
-      - key: build
-        description: "Build for production"
-      - key: dev
-        description: "Development mode with hot reload"
-        
-  - name: "Quality Assurance"
-    scripts:
-      - key: test
-        description: "Run test suite"
-      - key: lint
-        description: "Lint code and fix issues"
-      - key: type-check
-        description: "Run TypeScript type checking"
+${configScripts}
 `;
 
-  fs.writeFileSync(metaPath, exampleConfig);
-  console.log(`📝 Created example ${path.basename(metaPath)}`);
+  fs.writeFileSync(metaPath, config);
+  console.log(`📝 Generated configuration from ${scriptKeys.length} package.json scripts`);
 }
 
 /**

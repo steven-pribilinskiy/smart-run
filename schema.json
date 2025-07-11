@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/steven-pribilinskiy/smart-run/main/schema.json",
+  "title": "Smart-run Configuration",
+  "description": "Configuration schema for smart-run package script organization",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Schema reference URL"
+    },
+    "scriptGroups": {
+      "type": "array",
+      "description": "Groups of related scripts",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Display name for the script group"
+          },
+          "emoji": {
+            "type": "string",
+            "description": "Optional emoji icon for the group"
+          },
+          "scripts": {
+            "type": "array",
+            "description": "Scripts in this group",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "description": "Script name from package.json"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Human-readable description of the script"
+                },
+                "emoji": {
+                  "type": "string",
+                  "description": "Optional emoji icon for the script"
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Optional title for display purposes"
+                }
+              },
+              "required": ["key", "description"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["name", "scripts"],
+        "additionalProperties": false
+      }
+    },
+    "includeLifecycleScripts": {
+      "type": "boolean",
+      "description": "Whether to include npm lifecycle scripts (prestart, postinstall, etc.)",
+      "default": false
+    }
+  },
+  "required": ["scriptGroups"],
+  "additionalProperties": false
+}
