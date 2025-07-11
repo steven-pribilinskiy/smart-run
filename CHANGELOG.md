@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/steven-pribilinskiy/smart-run/compare/v1.0.0...v1.0.1) (2025-07-11)
+
+
+### Bug Fixes
+
+* replace setup-aliases with simplified global aliases and JSON schema support ([32a5f4f](https://github.com/steven-pribilinskiy/smart-run/commit/32a5f4f2d36908a094ad462cb97ea8821598cfad))
+
 # 1.0.0 (2025-07-11)
 
 
