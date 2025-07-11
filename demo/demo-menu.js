@@ -1,9 +1,14 @@
 #!/usr/bin/env node
 
-const fs = require('node:fs');
-const path = require('node:path');
-const { execSync } = require('node:child_process');
-const readline = require('node:readline');
+import { execSync } from 'node:child_process';
+import fs from 'node:fs';
+import path from 'node:path';
+import readline from 'node:readline';
+import { fileURLToPath } from 'node:url';
+
+// ES module equivalent of __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const demos = [
   {
@@ -96,7 +101,7 @@ function showDemoComparison() {
 
 function runDemo(demo) {
   const demoPath = path.join(__dirname, '../demo', demo.folder);
-  const smartRunPath = path.join(__dirname, '../dist/index.js');
+  const smartRunPath = path.join(__dirname, '../dist/cli.js');
 
   if (!fs.existsSync(demoPath)) {
     console.error(`❌ Demo folder not found: ${demoPath}`);
@@ -137,6 +142,11 @@ function runDemo(demo) {
     // Return to original directory
     process.chdir(path.join(__dirname, '..'));
   }
+
+  // Pause before returning to menu
+  console.log('\n✅ Demo completed!');
+  console.log('\n⏸️  Press Enter to return to the main menu...');
+  execSync('read -p ""', { stdio: 'inherit', shell: '/bin/bash' });
 }
 
 function runAllDemos() {
@@ -207,8 +217,8 @@ process.on('SIGINT', () => {
   process.exit(0);
 });
 
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   main().catch(console.error);
 }
 
-module.exports = { demos, runDemo, runAllDemos };
+export { demos, runDemo, runAllDemos };

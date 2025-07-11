@@ -23,7 +23,6 @@ This document provides a high-level tour of the Smart-Run code base. It is inten
    | `list-scripts.ts` | Non-interactive listing in JSON / table format. |
    | `migration.ts` | Converts legacy conventions (ntl, npm-scripts-info, better-scripts…) to Smart-Run native format. |
    | `preview.ts` | Pretty command preview outside of the interactive menu. |
-   | `setup-aliases.ts` | Global shell alias installation. |
    | `git-hooks.ts` | Simple Git hook manager used by `smart-run hooks`. |
 
 4. **Type declarations** – Domain types live alongside implementation today (mostly in `index.ts`).  They will be extracted to dedicated `types/` files during the clean-architecture refactor.

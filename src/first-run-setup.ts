@@ -1,7 +1,6 @@
 import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
-import inquirer from 'inquirer';
 
 /**
  * First-run setup utilities for smart-run CLI
@@ -45,30 +44,10 @@ function isGlobalInstallation(): boolean {
 async function runFirstTimeSetup(): Promise<void> {
   console.log('\n🎉 Welcome to smart-run!\n');
   console.log('This appears to be your first time using smart-run globally.');
-
-  const { setupAliases } = await inquirer.prompt([
-    {
-      type: 'confirm',
-      name: 'setupAliases',
-      message: 'Would you like to set up convenient aliases (srun, sr) for smart-run?',
-      default: true,
-    },
-  ]);
-
-  if (setupAliases) {
-    try {
-      const { setupGlobalAliases } = await import('./setup-aliases.js');
-      await setupGlobalAliases();
-    } catch (_error) {
-      console.log('\n❌ Failed to set up aliases automatically.');
-      console.log('💡 You can set up aliases later by running:');
-      console.log('   smart-run setup-aliases');
-    }
-  } else {
-    console.log('\n💡 You can set up aliases later by running:');
-    console.log('   smart-run setup-aliases');
-  }
-
+  console.log('\n✨ Available commands:');
+  console.log('   smart-run  - Full command name');
+  console.log('   srun       - Short alias');
+  console.log('   sr         - Ultra-short alias');
   console.log('\n📚 Documentation: https://github.com/steven-pribilinskiy/smart-run#readme');
   console.log('\n🚀 Get started by running: smart-run\n');
 

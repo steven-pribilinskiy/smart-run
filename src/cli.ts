@@ -71,14 +71,6 @@ program
   });
 
 program
-  .command('setup-aliases')
-  .description('Set up global aliases interactively')
-  .action(async () => {
-    const { setupGlobalAliases } = await import('./setup-aliases.js');
-    await setupGlobalAliases();
-  });
-
-program
   .command('ai')
   .description('Enable AI-powered script analysis and grouping')
   .option('--no-color', 'Disable colored output')

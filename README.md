@@ -33,11 +33,6 @@ After installation, use any of these commands:
 - `srun` - Short alias
 - `sr` - Ultra-short alias
 
-Set up aliases automatically during installation, or manually with:
-```bash
-smart-run --setup-aliases
-```
-
 ## Quick Start
 
 1. **Just run it** - smart-run works with any existing package.json:
@@ -92,16 +87,18 @@ smart-run [options] [command]
 
 Options:
   -c, --config <file>  Specify custom config file path
-  --preview-cmd        Show prettified command preview
+  --preview-cmd        Show prettified command preview in interactive mode
   --no-color          Disable colored output
   -h, --help          Show help
   -v, --version       Show version
 
 Commands:
   ai                  AI-powered script analysis and grouping
-  setup-aliases       Set up global aliases interactively
   migrate            Migrate existing configurations
   preview            Show all scripts with enhanced formatting
+  lint               Lint smart-run configuration for best practices
+  ls                 List all scripts in a table format with detailed information
+  hooks              Manage git hooks for configuration linting
 
 Examples:
   smart-run                    # Interactive menu
@@ -116,7 +113,7 @@ If no configuration is found, smart-run offers several setup options:
 
 - **🧠 AI Analysis** - Auto-generate configuration with intelligent grouping
 - **📝 Manual Setup** - Generate prompt for external AI tools
-- **📄 Create Example** - Create basic example configuration
+- **📋 Generate Config** - Create config from package.json scripts
 - **⏭️ Continue** - Use scripts without configuration
 
 ## Documentation

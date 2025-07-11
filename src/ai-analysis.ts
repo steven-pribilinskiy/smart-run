@@ -66,7 +66,31 @@ export async function runAIAnalysis(options: { disableColors?: boolean } = {}): 
   if (providers.length === 0) {
     console.log('🔑 No AI API keys detected.');
     console.log('   Looking for: OPENAI_API_KEY, ANTHROPIC_API_KEY, GOOGLE_API_KEY\n');
+    console.log('💡 To use AI Analysis, you need to set up at least one of these API keys:');
+    console.log('   1. Create a .env file in your project root with your API key(s)');
+    console.log('      Example: OPENAI_API_KEY=sk-xxxxx');
+    console.log('   2. Or set an environment variable before running smart-run:');
+    console.log('      export OPENAI_API_KEY=sk-xxxxx');
+    console.log('      smart-run ai\n');
+    
+    // Ask if user wants to continue with manual analysis
+    const { continueMethod } = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'continueMethod',
+        message: 'How would you like to proceed?',
+        choices: [
+          { name: '📋 Continue with Manual Prompt', value: 'manual' },
+          { name: '❌ Cancel', value: 'cancel' },
+        ],
+      },
+    ]);
 
+    if (continueMethod === 'cancel') {
+      console.log('👋 Analysis cancelled.');
+      return;
+    }
+    
     await handleManualAnalysis(aiService, validScripts);
     return;
   }
