@@ -54,7 +54,7 @@
     "inquirer-autocomplete-standalone": "^0.8.1",
     "js-yaml": "^4.1.0",
     "openai": "^5.9.0",
-    "shiny-command-line": "^1.0.0"
+    "shiny-command-line": "^1.0.1"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.1.1",
