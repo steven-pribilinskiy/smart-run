@@ -4,9 +4,7 @@
   "description": "AI-powered interactive CLI for running package scripts with intelligent grouping and descriptions",
   "main": "dist/index.js",
   "bin": {
-    "smart-run": "dist/cli.js",
-    "srun": "dist/cli.js",
-    "sr": "dist/cli.js"
+    "smart-run": "dist/cli.js"
   },
   "type": "module",
   "scripts": {

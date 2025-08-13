@@ -8,13 +8,11 @@
 ## Features
 
 - 🧠 **AI-Powered**: Automatic script analysis and intelligent grouping using an LLM
-- 📋 **Interactive Menu**: Beautiful CLI interface for selecting scripts
+- 📋 **Interactive Menu**: Convenient CLI interface for selecting scripts
 - 🏷️ **Flexible Configuration**: Works with existing setups and multiple configuration formats
 - 📝 **Rich Descriptions**: Add meaningful descriptions to your scripts
 - 🔍 **Smart Script Detection**: Highlights missing scripts, ungrouped items, and scripts without descriptions
-- 📦 **Automatic Package Manager Detection**: Intelligently detects npm, pnpm, bun, yarn, and other package managers
-- ⚡ **Universal**: Works with npm, pnpm, bun, yarn, and any package manager
-- 🎨 **Multiple Aliases**: Use `smart-run`, `srun`, or `sr` for quick access
+- 📦 **Universal Package Manager Support**: Intelligently detects and works with npm, pnpm, bun, yarn, and any other package manager
 
 ## Installation
 
@@ -26,12 +24,12 @@ npm install -g smart-run
 npx smart-run
 ```
 
-### Aliases
+### Usage
 
-After installation, use any of these commands:
-- `smart-run` - Full command name
-- `srun` - Short alias
-- `sr` - Ultra-short alias
+After installation, use:
+- `smart-run`
+
+Suggested aliases: `srun`, `sr`
 
 ## Quick Start
 
@@ -39,10 +37,7 @@ After installation, use any of these commands:
 
 ```bash
 smart-run
-# or use the short aliases:
-srun
-# or even shorter:
-sr
+# that's it!
 ```
 
 2. **Optional**: Create a `package-meta.yaml` for organized script groups:
@@ -94,16 +89,16 @@ Options:
 
 Commands:
   ai                  AI-powered script analysis and grouping
-  migrate            Migrate existing configurations
-  preview            Show all scripts with enhanced formatting
-  lint               Lint smart-run configuration for best practices
-  ls                 List all scripts in a table format with detailed information
-  hooks              Manage git hooks for configuration linting
+  migrate             Migrate existing configurations
+  preview             Show all scripts with enhanced formatting
+  lint                Lint smart-run configuration for best practices
+  ls                  List all scripts in a table format with detailed information
+  hooks               Manage git hooks for configuration linting
 
 Examples:
-  smart-run                    # Interactive menu
-  srun --config my-config.yaml # Use custom config
-  sr --preview-cmd             # Show command preview
+  smart-run                     # Interactive menu
+  smart-run --config my-config.yaml # Use custom config
+  smart-run --preview-cmd      # Show command preview
   smart-run ai                 # AI analysis workflow
 ```
 
