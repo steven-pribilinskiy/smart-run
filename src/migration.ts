@@ -562,7 +562,8 @@ export async function saveConfiguration(
       let packageJsonPath = 'package.json';
       if (!fs.existsSync(packageJsonPath)) {
         const demoPath = 'package.demo.json';
-        if (fs.existsSync(demoPath)) {
+        const { isInsideSmartRunRepo } = await import('./index.js');
+        if (isInsideSmartRunRepo() && fs.existsSync(demoPath)) {
           packageJsonPath = demoPath;
         }
       }

@@ -1,17 +1,20 @@
 #!/usr/bin/env node
 
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
+import path from 'node:path';
 import { Command } from 'commander';
 import { runSmartRun } from './index.js';
+import { isInsideSmartRunRepo as isInsideSmartRunRepoFromIndex } from './index.js';
 
 // Read package.json to get version and homepage
 function getPackageInfo() {
   try {
     // Try package.json first, then package.demo.json for demo directories
     let packagePath = 'package.json';
-    if (!require('node:fs').existsSync(packagePath)) {
+    if (!existsSync(packagePath)) {
       const demoPath = 'package.demo.json';
-      if (require('node:fs').existsSync(demoPath)) {
+      // Only use package.demo.json inside smart-run repo
+      if (isInsideSmartRunRepoLocal() && existsSync(demoPath)) {
         packagePath = demoPath;
       }
     }
@@ -59,8 +62,8 @@ program
       // Handle first-run setup for global installations
       const { handleFirstRunSetup } = await import('./first-run-setup.js');
       await handleFirstRunSetup();
-
-      await runSmartRun(options.config, {
+      const { executeInteractive } = await import('./application/execute.js');
+      await executeInteractive(options.config, {
         previewCommand: options.previewCmd,
         disableColors: options.noColor,
       });
@@ -83,8 +86,8 @@ program
   .command('migrate')
   .description('Migrate existing configurations to smart-run format')
   .action(async () => {
-    const { runMigration } = await import('./migration.js');
-    await runMigration();
+    const { migrate } = await import('./application/migrate.js');
+    await migrate();
   });
 
 program
@@ -101,8 +104,8 @@ program
   .description('Lint smart-run configuration for best practices')
   .argument('[directory]', 'Directory to lint (default: current directory)', '.')
   .action(async (directory) => {
-    const { lintDirectory } = await import('./config-linter.js');
-    const passed = lintDirectory(directory);
+    const { lint } = await import('./application/lint.js');
+    const passed = lint(directory);
     process.exit(passed ? 0 : 1);
   });
 
@@ -112,11 +115,22 @@ program
   .option('--json', 'Output as JSON instead of table')
   .option('--no-colors', 'Disable colored output')
   .action(async (options) => {
-    const { runListScripts } = await import('./list-scripts.js');
-    await runListScripts({
-      json: options.json,
-      disableColors: options.noColors,
-    });
+    const { listScripts } = await import('./application/list.js');
+    await listScripts({ json: options.json, disableColors: options.noColors });
+  });
+program
+  .command('convert')
+  .description('Convert from detected format to another')
+  .option('--to <format>', 'Target format: smart-run|json|scriptsMeta', 'smart-run')
+  .option('--output <file>', 'Output file path')
+  .action(async (options) => {
+    const { convertConfig } = await import('./application/convert.js');
+    const res = convertConfig({ to: options.to, output: options.output });
+    if (res.writtenTo) {
+      console.log(`✅ Converted configuration written to ${res.writtenTo}`);
+    } else {
+      console.log('✅ Converted configuration in-memory');
+    }
   });
 
 program
@@ -126,28 +140,20 @@ program
   .argument('[hooks...]', 'Hook types to manage (pre-commit, pre-push, commit-msg)')
   .option('--force', 'Force overwrite existing hooks')
   .action(async (command, hooks, options) => {
-    const { cli } = await import('./git-hooks.js');
-
-    // Set up process.argv for the git-hooks CLI
-    process.argv = ['node', 'git-hooks.js', command || 'help', ...hooks];
-    if (options.force) {
-      process.argv.push('--force');
-    }
-
-    cli();
+    const { runHooksCli } = await import('./hooks/cli.js');
+    const argv = ['node', 'smart-run-hooks', command || 'help', ...hooks];
+    if (options.force) argv.push('--force');
+    runHooksCli(argv);
   });
 
 // Add examples and additional help
 program.addHelpText(
   'after',
   `
-Aliases:
-  srun, sr                     # Short aliases for smart-run
-
 Common Workflows:
   smart-run                    # Start interactive script menu
-  srun --preview-cmd           # Quick access with command preview
-  smart-run ai && srun         # AI-organize scripts, then run
+  smart-run --preview-cmd      # Quick access with command preview
+  smart-run ai && smart-run    # AI-organize scripts, then run
   smart-run migrate            # One-time: migrate from npm-scripts-info
   
 Development Integration:
@@ -160,3 +166,33 @@ For more information, visit: ${packageInfo.homepage}
 );
 
 program.parse();
+
+function isInsideSmartRunRepoLocal(): boolean {
+  try {
+    // Walk up from current file's directory to detect smart-run's own package.json
+    let currentDir = process.cwd();
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const pkgPath = path.join(currentDir, 'package.json');
+      if (existsSync(pkgPath)) {
+        try {
+          const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8')) as { name?: string };
+          if (pkg && pkg.name === 'smart-run') return true;
+        } catch {
+          // ignore
+        }
+      }
+      const parent = path.dirname(currentDir);
+      if (parent === currentDir) break;
+      currentDir = parent;
+    }
+  } catch {
+    // ignore
+  }
+  // Fallback to the exported helper if available
+  try {
+    return isInsideSmartRunRepoFromIndex();
+  } catch {
+    return false;
+  }
+}

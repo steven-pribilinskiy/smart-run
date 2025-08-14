@@ -23,7 +23,7 @@ describe('Demo Configuration Tests', () => {
     let packageJson: PackageJson;
 
     beforeAll(() => {
-      const packagePath = path.join(demoDir, 'basic-scripts/package.demo.json');
+      const packagePath = path.join(demoDir, 'zero-config/basic-scripts/package.demo.json');
       packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8')) as PackageJson;
     });
 
@@ -88,7 +88,7 @@ describe('Demo Configuration Tests', () => {
     let packageJson: PackageJson;
 
     beforeAll(() => {
-      const packagePath = path.join(demoDir, 'ntl-format/package.demo.json');
+      const packagePath = path.join(demoDir, 'external-formats/ntl-format/package.demo.json');
       packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8')) as PackageJson;
     });
 
@@ -139,7 +139,7 @@ describe('Demo Configuration Tests', () => {
     let packageJson: PackageJson;
 
     beforeAll(() => {
-      const packagePath = path.join(demoDir, 'npm-scripts-org/package.demo.json');
+      const packagePath = path.join(demoDir, 'external-formats/npm-scripts-org/package.demo.json');
       packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8')) as PackageJson;
     });
 
@@ -197,7 +197,7 @@ describe('Demo Configuration Tests', () => {
     let packageJson: PackageJson;
 
     beforeAll(() => {
-      const packagePath = path.join(demoDir, 'npm-scripts-info/package.demo.json');
+      const packagePath = path.join(demoDir, 'external-formats/npm-scripts-info/package.demo.json');
       packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8')) as PackageJson;
     });
 
@@ -241,7 +241,7 @@ describe('Demo Configuration Tests', () => {
     let packageJson: PackageJson;
 
     beforeAll(() => {
-      const packagePath = path.join(demoDir, 'better-scripts/package.demo.json');
+      const packagePath = path.join(demoDir, 'external-formats/better-scripts/package.demo.json');
       packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8')) as PackageJson;
     });
 
@@ -308,8 +308,11 @@ describe('Demo Configuration Tests', () => {
     let packageMeta: PackageMeta;
 
     beforeAll(() => {
-      const packagePath = path.join(demoDir, 'smart-run-native/package.demo.json');
-      const metaPath = path.join(demoDir, 'smart-run-native/package-meta.yaml');
+      const packagePath = path.join(
+        demoDir,
+        'smart-run-formats/smart-run-native/package.demo.json'
+      );
+      const metaPath = path.join(demoDir, 'smart-run-formats/smart-run-native/package-meta.yaml');
 
       packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8')) as PackageJson;
       packageMeta = yaml.load(fs.readFileSync(metaPath, 'utf8')) as PackageMeta;
@@ -368,8 +371,8 @@ describe('Demo Configuration Tests', () => {
     let packageMeta: PackageMeta;
 
     beforeAll(() => {
-      const packagePath = path.join(demoDir, 'enhanced-format/package.demo.json');
-      const metaPath = path.join(demoDir, 'enhanced-format/package-meta.yaml');
+      const packagePath = path.join(demoDir, 'smart-run-formats/enhanced-format/package.demo.json');
+      const metaPath = path.join(demoDir, 'smart-run-formats/enhanced-format/package-meta.yaml');
 
       packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8')) as PackageJson;
       packageMeta = yaml.load(fs.readFileSync(metaPath, 'utf8')) as PackageMeta;
@@ -481,13 +484,13 @@ describe('Demo Configuration Tests', () => {
 
     test('all demos should have consistent complex commands', () => {
       const demoFolders = [
-        'basic-scripts',
-        'ntl-format',
-        'npm-scripts-org',
-        'npm-scripts-info',
-        'better-scripts',
-        'smart-run-native',
-        'enhanced-format',
+        'zero-config/basic-scripts',
+        'external-formats/ntl-format',
+        'external-formats/npm-scripts-org',
+        'external-formats/npm-scripts-info',
+        'external-formats/better-scripts',
+        'smart-run-formats/smart-run-native',
+        'smart-run-formats/enhanced-format',
       ];
 
       demoFolders.forEach((folder) => {
@@ -514,13 +517,13 @@ describe('Demo Configuration Tests', () => {
 
     test('all demos should have AWS deployment script', () => {
       const demoFolders = [
-        'basic-scripts',
-        'ntl-format',
-        'npm-scripts-org',
-        'npm-scripts-info',
-        'better-scripts',
-        'smart-run-native',
-        'enhanced-format',
+        'zero-config/basic-scripts',
+        'external-formats/ntl-format',
+        'external-formats/npm-scripts-org',
+        'external-formats/npm-scripts-info',
+        'external-formats/better-scripts',
+        'smart-run-formats/smart-run-native',
+        'smart-run-formats/enhanced-format',
       ];
 
       demoFolders.forEach((folder) => {
@@ -537,13 +540,13 @@ describe('Demo Configuration Tests', () => {
 
     test('all demos should have Docker build script', () => {
       const demoFolders = [
-        'basic-scripts',
-        'ntl-format',
-        'npm-scripts-org',
-        'npm-scripts-info',
-        'better-scripts',
-        'smart-run-native',
-        'enhanced-format',
+        'zero-config/basic-scripts',
+        'external-formats/ntl-format',
+        'external-formats/npm-scripts-org',
+        'external-formats/npm-scripts-info',
+        'external-formats/better-scripts',
+        'smart-run-formats/smart-run-native',
+        'smart-run-formats/enhanced-format',
       ];
 
       demoFolders.forEach((folder) => {

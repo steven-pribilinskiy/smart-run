@@ -13,13 +13,13 @@ describe('Demo Performance Tests', () => {
   describe('Command Line Length Performance', () => {
     test('should handle very long command lines efficiently', () => {
       const demoFolders = [
-        'basic-scripts',
-        'ntl-format',
-        'npm-scripts-org',
-        'npm-scripts-info',
-        'better-scripts',
-        'smart-run-native',
-        'enhanced-format',
+        'zero-config/basic-scripts',
+        'external-formats/ntl-format',
+        'external-formats/npm-scripts-org',
+        'external-formats/npm-scripts-info',
+        'external-formats/better-scripts',
+        'smart-run-formats/smart-run-native',
+        'smart-run-formats/enhanced-format',
       ];
 
       demoFolders.forEach((folder) => {
@@ -46,19 +46,19 @@ describe('Demo Performance Tests', () => {
     test('should handle configuration parsing efficiently', () => {
       const configTests = [
         {
-          folder: 'ntl-format',
+          folder: 'external-formats/ntl-format',
           hasConfig: (pkg: Record<string, unknown>) => Boolean(pkg.ntl),
         },
         {
-          folder: 'npm-scripts-info',
+          folder: 'external-formats/npm-scripts-info',
           hasConfig: (pkg: Record<string, unknown>) => Boolean(pkg['scripts-info']),
         },
         {
-          folder: 'better-scripts',
+          folder: 'external-formats/better-scripts',
           hasConfig: (pkg: Record<string, unknown>) => Boolean(pkg['better-scripts']),
         },
         {
-          folder: 'npm-scripts-org',
+          folder: 'external-formats/npm-scripts-org',
           hasConfig: (pkg: Record<string, unknown>) =>
             Object.keys((pkg.scripts as Record<string, string>) || {}).some((k) =>
               k.startsWith('comment:')
@@ -91,13 +91,13 @@ describe('Demo Performance Tests', () => {
       // Load all demo configurations multiple times
       for (let i = 0; i < 10; i++) {
         const demoFolders = [
-          'basic-scripts',
-          'ntl-format',
-          'npm-scripts-org',
-          'npm-scripts-info',
-          'better-scripts',
-          'smart-run-native',
-          'enhanced-format',
+          'zero-config/basic-scripts',
+          'external-formats/ntl-format',
+          'external-formats/npm-scripts-org',
+          'external-formats/npm-scripts-info',
+          'external-formats/better-scripts',
+          'smart-run-formats/smart-run-native',
+          'smart-run-formats/enhanced-format',
         ];
 
         demoFolders.forEach((folder) => {
@@ -123,13 +123,13 @@ describe('Demo Performance Tests', () => {
   describe('Scalability', () => {
     test('should handle large number of scripts efficiently', () => {
       const demoFolders = [
-        'basic-scripts',
-        'ntl-format',
-        'npm-scripts-org',
-        'npm-scripts-info',
-        'better-scripts',
-        'smart-run-native',
-        'enhanced-format',
+        'zero-config/basic-scripts',
+        'external-formats/ntl-format',
+        'external-formats/npm-scripts-org',
+        'external-formats/npm-scripts-info',
+        'external-formats/better-scripts',
+        'smart-run-formats/smart-run-native',
+        'smart-run-formats/enhanced-format',
       ];
 
       demoFolders.forEach((folder) => {

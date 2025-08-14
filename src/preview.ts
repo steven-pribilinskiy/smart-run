@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { prettifyCommands, shouldPrettifyCommand } from 'shiny-command-line';
 
 /**
@@ -10,9 +10,10 @@ export async function runPreview(options: { disableColors?: boolean } = {}): Pro
   try {
     // Read package.json or package.demo.json
     let packagePath = 'package.json';
-    if (!require('node:fs').existsSync(packagePath)) {
+    if (!existsSync(packagePath)) {
       const demoPath = 'package.demo.json';
-      if (require('node:fs').existsSync(demoPath)) {
+      const { isInsideSmartRunRepo } = await import('./index.js');
+      if (isInsideSmartRunRepo() && existsSync(demoPath)) {
         packagePath = demoPath;
       }
     }

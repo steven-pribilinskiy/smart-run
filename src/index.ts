@@ -6,87 +6,49 @@ import autocomplete from 'inquirer-autocomplete-standalone';
 import yaml from 'js-yaml';
 import { getCommandPreview, prettifyCommand, shouldPrettifyCommand } from 'shiny-command-line';
 import { AIService } from './ai-service.js';
+import type {
+  AutocompleteChoice,
+  Choice,
+  PackageJson,
+  PackageMeta,
+  ScriptConfig,
+  ScriptGroup,
+} from './types.js';
+import { isInsideSmartRunRepo } from './core/repo.js';
+import { getScriptGroups as getScriptGroupsCore } from './core/config.js';
+import { getPackageJson as getPackageJsonCore } from './core/package.js';
+import { detectPackageManager as detectPackageManagerCore } from './core/detect-package-manager.js';
+import {
+  getLifecycleScripts as getLifecycleScriptsCore,
+  parseNpmScriptGroups as parseNpmScriptGroupsCore,
+  getNpmScriptsInfoDescriptions as getNpmScriptsInfoDescriptionsCore,
+  getNtlDescriptions as getNtlDescriptionsCore,
+  extractDescriptionFromEcho as extractDescriptionFromEchoCore,
+} from './core/scripts.js';
 
 // npm-scripts-info functionality implemented directly
 
 // Export migration functions
+export { convertBetterScriptsToSmartRun } from './migration/convert/better-scripts.js';
 export {
-  convertBetterScriptsToSmartRun,
-  convertNpmScriptsInfoToSmartRun,
+  convertNpmScriptsToSmartRun,
   convertNpmScriptsOrgToSmartRun,
-  convertNtlToSmartRun,
-  detectConfigurationType,
-  loadScriptsFromPackageJson,
-  migrateToSmartRun,
-} from './migration.js';
+} from './migration/convert/npm-scripts.js';
+export {
+  convertScriptsInfoToSmartRun,
+  convertNpmScriptsInfoToSmartRun,
+} from './migration/convert/scripts-info.js';
+export { convertScriptsDescriptionToSmartRun } from './migration/convert/scripts-description.js';
+export { convertNtlToSmartRun } from './migration/convert/ntl.js';
+export { detectConfigurationType } from './migration/detect.js';
+export { migrateToSmartRun } from './migration/main.js';
 
-export type ScriptConfig = {
-  key: string;
-  description: string;
-  title?: string; // Visual display name (alternative to better-scripts' alias)
-  emoji?: string; // Visual emoji identifier
-};
+export type { AutocompleteChoice, Choice, PackageJson, PackageMeta, ScriptConfig, ScriptGroup };
 
-export type ScriptGroup = {
-  name: string;
-  scripts: ScriptConfig[];
-};
-
-export type PackageMeta = {
-  scriptGroups: ScriptGroup[];
-  includeLifecycleScripts?: boolean;
-};
-
-export type NtlDescriptions = {
-  [scriptName: string]: string;
-};
-
-export type PackageJson = {
-  scripts?: Record<string, string>;
-  packageManager?: string;
-  ntl?: {
-    descriptions?: NtlDescriptions;
-    runner?: string;
-    [key: string]: unknown;
-  };
-  // Additional properties accessed in the codebase
-  scriptsMeta?: {
-    scriptGroups?: ScriptGroup[];
-    includeLifecycleScripts?: boolean;
-  };
-  'scripts-info'?: Record<string, string>;
-  'scripts-description'?: Record<string, string>;
-  'better-scripts'?: Record<string, unknown>;
-  smartRun?: {
-    linter?: {
-      requireScriptGroups?: boolean;
-      requireDescription?: boolean;
-      requireEmoji?: boolean;
-      requireTitle?: boolean;
-      rules?: Record<string, { level: 'error' | 'warning' | 'info' }>;
-    };
-  };
-  linter?: {
-    requireScriptGroups?: boolean;
-    requireDescription?: boolean;
-    requireEmoji?: boolean;
-    requireTitle?: boolean;
-    rules?: Record<string, { level: 'error' | 'warning' | 'info' }>;
-  };
-};
-
-export type Choice = {
-  name: string;
-  value: string | null;
-  disabled?: boolean | string;
-};
-
-export type AutocompleteChoice = {
-  name: string;
-  value: string | null;
-  description?: string;
-  disabled?: boolean | string;
-};
+/**
+ * Check whether the current process is running inside the smart-run repository
+ */
+export { isInsideSmartRunRepo };
 
 /**
  * Simple fuzzy matching function
@@ -151,140 +113,22 @@ function fuzzyScore(search: string, target: string): number {
  * Get lifecycle scripts from package.json
  * These are npm's predefined lifecycle hooks
  */
-export function getLifecycleScripts(scripts: Record<string, string>): ScriptGroup | null {
-  const lifecycleScripts = [
-    'preinstall',
-    'install',
-    'postinstall',
-    'preuninstall',
-    'uninstall',
-    'postuninstall',
-    'preversion',
-    'version',
-    'postversion',
-    'pretest',
-    'test',
-    'posttest',
-    'prestop',
-    'stop',
-    'poststop',
-    'prestart',
-    'start',
-    'poststart',
-    'prerestart',
-    'restart',
-    'postrestart',
-    'prepublish',
-    'publish',
-    'postpublish',
-    'prepublishOnly',
-    'prepare',
-    'prepack',
-    'postpack',
-    'preprepare',
-    'postprepare',
-    'dependencies',
-  ];
-
-  const foundLifecycleScripts = lifecycleScripts
-    .filter((scriptName) => scripts[scriptName])
-    .map((scriptName) => ({
-      key: scriptName,
-      description: scripts[scriptName],
-    }));
-
-  if (foundLifecycleScripts.length === 0) {
-    return null;
-  }
-
-  return {
-    name: 'Lifecycle Scripts',
-    scripts: foundLifecycleScripts,
-  };
-}
+export const getLifecycleScripts = getLifecycleScriptsCore;
 
 /**
  * Load script groups from package-meta.yaml or package.json scriptsMeta
  */
-export function getScriptGroups(configPath = 'package-meta.yaml'): ScriptGroup[] {
-  const metaPath = path.resolve(process.cwd(), configPath);
-
-  // First try to load from specified config file
-  if (fs.existsSync(metaPath)) {
-    try {
-      const meta = yaml.load(fs.readFileSync(metaPath, 'utf8')) as PackageMeta;
-      if (!meta || typeof meta !== 'object' || !Array.isArray(meta.scriptGroups)) {
-        console.error(`Invalid format in ${configPath}. Expected scriptGroups array.`);
-        return [];
-      }
-      return meta.scriptGroups;
-    } catch (error) {
-      console.error(`Error parsing ${configPath}:`, error);
-      return [];
-    }
-  }
-
-  // If no config file exists, try to load from package.json scriptsMeta
-  if (configPath === 'package-meta.yaml') {
-    try {
-      const pkg = getPackageJson();
-      if (pkg?.scriptsMeta && Array.isArray(pkg.scriptsMeta.scriptGroups)) {
-        return pkg.scriptsMeta.scriptGroups;
-      }
-    } catch (_error) {
-      // Ignore errors when trying to load from package.json
-    }
-  }
-
-  return [];
-}
+export const getScriptGroups = getScriptGroupsCore;
 
 /**
  * Load npm scripts from package.json or package.demo.json
  */
-function _getNpmScripts(): Record<string, string> {
-  let pkgPath = path.resolve(process.cwd(), 'package.json');
-
-  // If package.json doesn't exist, try package.demo.json (for demo directories)
-  if (!fs.existsSync(pkgPath)) {
-    const demoPkgPath = path.resolve(process.cwd(), 'package.demo.json');
-    if (fs.existsSync(demoPkgPath)) {
-      pkgPath = demoPkgPath;
-    } else {
-      throw new Error('package.json not found in current directory');
-    }
-  }
-
-  try {
-    const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-    return pkg.scripts || {};
-  } catch (_error) {
-    throw new Error('Error parsing package.json');
-  }
-}
+import { getNpmScripts as _getNpmScripts } from './core/package.js';
 
 /**
  * Load package.json with full structure, or package.demo.json for demo directories
  */
-export function getPackageJson(): PackageJson {
-  let pkgPath = path.resolve(process.cwd(), 'package.json');
-
-  // If package.json doesn't exist, try package.demo.json (for demo directories)
-  if (!fs.existsSync(pkgPath)) {
-    const demoPkgPath = path.resolve(process.cwd(), 'package.demo.json');
-    if (fs.existsSync(demoPkgPath)) {
-      pkgPath = demoPkgPath;
-    } else {
-      throw new Error('package.json not found in current directory');
-    }
-  }
-
-  try {
-    return JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-  } catch (_error) {
-    throw new Error('Error parsing package.json');
-  }
-}
+export const getPackageJson = getPackageJsonCore;
 
 // Export for use in other modules
 // getPackageJson is already exported as a function declaration
@@ -293,117 +137,25 @@ export function getPackageJson(): PackageJson {
  * Parse npm-scripts organization pattern from package.json scripts
  * Detects category headers like "\n# CATEGORY:" with empty string values
  */
-export function parseNpmScriptGroups(scripts: Record<string, string>): ScriptGroup[] {
-  const groups: ScriptGroup[] = [];
-  let currentGroup: ScriptGroup | null = null;
-
-  for (const [key, value] of Object.entries(scripts)) {
-    // Check if this is a category header (starts with \n# and has empty value)
-    if (key.startsWith('\n#') && value === '') {
-      // Extract category name (remove \n# and trailing :)
-      const categoryName = key.replace(/^\n#\s*/, '').replace(/:?\s*$/, '');
-
-      if (currentGroup) {
-        groups.push(currentGroup);
-      }
-
-      currentGroup = {
-        name: categoryName,
-        scripts: [],
-      };
-    } else if (currentGroup && !key.startsWith('\n#')) {
-      // Add script to current group
-      currentGroup.scripts.push({
-        key,
-        description: value, // Use the script command as description
-      });
-    } else if (!currentGroup && !key.startsWith('\n#')) {
-      // Script without category - create "Scripts" group
-      if (!groups.find((g) => g.name === 'Scripts')) {
-        groups.push({
-          name: 'Scripts',
-          scripts: [],
-        });
-      }
-      const scriptsGroup = groups.find((g) => g.name === 'Scripts')!;
-      scriptsGroup.scripts.push({
-        key,
-        description: value,
-      });
-    }
-  }
-
-  if (currentGroup) {
-    groups.push(currentGroup);
-  }
-
-  return groups;
-}
+export const parseNpmScriptGroups = parseNpmScriptGroupsCore;
 
 /**
  * Parse ntl descriptions from package.json
  */
-export function getNtlDescriptions(pkg: PackageJson): NtlDescriptions {
-  return pkg.ntl?.descriptions || {};
-}
+export const getNtlDescriptions = getNtlDescriptionsCore;
 
 /**
  * Get script descriptions using npm-scripts-info approach
  * Supports both scripts-info field and ? prefixed scripts
  */
-export function getNpmScriptsInfoDescriptions(pkg: PackageJson): Record<string, string> {
-  try {
-    // Check for scripts-info property
-    if ('scripts-info' in pkg && pkg['scripts-info']) {
-      return pkg['scripts-info'] as Record<string, string>;
-    }
-
-    // Look for ? prefixed scripts (description scripts)
-    const scriptsInfo: Record<string, string> = {};
-    const scripts = pkg.scripts || {};
-
-    Object.keys(scripts)
-      .filter((scriptName) => scriptName.startsWith('?'))
-      .forEach((scriptName) => {
-        const actualScriptName = scriptName.substring(1);
-        const description = extractDescriptionFromEcho(scripts[scriptName]);
-        scriptsInfo[actualScriptName] = description;
-      });
-
-    return scriptsInfo;
-  } catch (_error) {
-    // If parsing fails, return empty object
-    return {};
-  }
-}
+export const getNpmScriptsInfoDescriptions = getNpmScriptsInfoDescriptionsCore;
 
 /**
  * Extract description from echo commands
  * e.g., "echo 'Start the server'" -> "Start the server"
  */
-function extractDescriptionFromEcho(command: string): string {
-  const echoRegex = /^\s*echo\s+/;
-  const match = echoRegex.exec(command);
-
-  if (!match) {
-    return command;
-  }
-
-  let description = command.substring(match[0].length);
-
-  // Remove echo flags like -e, -E, -n
-  const flagRegex = /^-[eEn]+\s+/;
-  let flagMatch: RegExpExecArray | null = flagRegex.exec(description);
-  while (flagMatch !== null) {
-    description = description.substring(flagMatch[0].length);
-    flagMatch = flagRegex.exec(description);
-  }
-
-  // Remove quotes
-  description = description.replace(/^["']|["']$/g, '');
-
-  return description;
-}
+// Re-export for consumers that relied on previous symbol location
+export const extractDescriptionFromEcho = extractDescriptionFromEchoCore;
 
 /**
  * Format script display name with title, emoji, and description
@@ -428,34 +180,7 @@ function formatScriptDisplayName(script: ScriptConfig): string {
 /**
  * Detect package manager from multiple sources
  */
-function detectPackageManager(pkg?: PackageJson): string {
-  // Priority 1: ntl.runner configuration
-  if (pkg?.ntl?.runner) {
-    return pkg.ntl.runner;
-  }
-
-  // Priority 2: packageManager field (npm/yarn/pnpm standard)
-  if (pkg?.packageManager) {
-    const manager = pkg.packageManager.split('@')[0]; // Remove version if present
-    if (['npm', 'pnpm', 'bun', 'yarn'].includes(manager)) {
-      return manager;
-    }
-  }
-
-  // Priority 3: Lock file detection
-  if (fs.existsSync('pnpm-lock.yaml')) return 'pnpm';
-  if (fs.existsSync('bun.lockb')) return 'bun';
-  if (fs.existsSync('yarn.lock')) return 'yarn';
-
-  // Priority 4: Environment variable (for ntl compatibility)
-  const envRunner = process.env.NTL_RUNNER;
-  if (envRunner && ['npm', 'pnpm', 'bun', 'yarn'].includes(envRunner)) {
-    return envRunner;
-  }
-
-  // Default fallback
-  return 'npm';
-}
+const detectPackageManager = detectPackageManagerCore;
 
 /**
  * Offer AI analysis or manual configuration setup
@@ -537,7 +262,9 @@ async function offerConfigurationSetup(
 
     case 'continue':
       console.log('⏭️  Continuing without configuration...\n');
-      console.log('📝 You can create a package-meta.yaml configuration file to organize your scripts.');
+      console.log(
+        '📝 You can create a package-meta.yaml configuration file to organize your scripts.'
+      );
       console.log('🚀 Run smart-run again to use the configuration.');
       return false; // Continue with current flow
   }
@@ -547,15 +274,19 @@ async function offerConfigurationSetup(
 function generateConfigFromPackageJson(metaPath: string): void {
   const scripts = _getNpmScripts();
   const scriptKeys = Object.keys(scripts);
-  
+
   if (scriptKeys.length === 0) {
     console.log('⚠️  No scripts found in package.json');
     return;
   }
 
-  const configScripts = scriptKeys.map(key => `      - key: ${key}
-        description: ""`).join('\n');
-  
+  const configScripts = scriptKeys
+    .map(
+      (key) => `      - key: ${key}
+        description: ""`
+    )
+    .join('\n');
+
   const config = `# Smart-run configuration
 # Generated from package.json scripts
 $schema: "https://raw.githubusercontent.com/steven-pribilinskiy/smart-run/main/schema.json"
