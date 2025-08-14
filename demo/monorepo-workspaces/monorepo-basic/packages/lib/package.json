@@ -1,0 +1,10 @@
+{
+  "name": "monorepo-lib",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "echo lib build",
+    "lint": "echo lib lint"
+  }
+}
+
+

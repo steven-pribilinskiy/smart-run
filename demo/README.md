@@ -1,73 +1,48 @@
 # Smart-run Configuration Demos
 
-This folder contains demonstrations of smart-run working with various npm script organization formats. Each subdirectory showcases a different configuration approach.
+This folder contains demonstrations of smart-run working with various npm script organization formats. Demos are organized by category for clarity.
 
-## Available Demos
+## Categories
 
-### 🔧 [basic-scripts/](./basic-scripts/)
-**Standard npm scripts with no special configuration**
-- Demonstrates smart-run working with any existing package.json
-- Shows the fallback behavior when no configuration is detected
-- Scripts are displayed as simple key-value pairs
+### zero-config
+- 🔧 [basic-scripts/](./zero-config/basic-scripts/)
+  - Standard npm scripts with no special configuration
+  - Shows fallback behavior when no configuration is detected
 
-### 📋 [ntl-format/](./ntl-format/)
-**[ntl](https://github.com/ruyadorno/ntl) (npm task list) configuration**
-- Uses `ntl.descriptions` for script descriptions
-- Includes `ntl.runner` for package manager configuration
-- Shows flat script list with descriptions
+### external-formats
+- 📋 [ntl-format/](./external-formats/ntl-format/)
+  - ntl.descriptions-based descriptions
+- 📂 [npm-scripts-org/](./external-formats/npm-scripts-org/)
+  - Comment header-based grouping
+- 📝 [npm-scripts-info/](./external-formats/npm-scripts-info/)
+  - scripts-info field for descriptions
+- 🎯 [better-scripts/](./external-formats/better-scripts/)
+  - Mixed object/array/string definitions with aliases
 
-### 📂 [npm-scripts-org/](./npm-scripts-org/)
-**npm-scripts organization pattern**
-- Uses category headers like `"\n# DEVELOPMENT:"` in scripts
-- Demonstrates automatic grouping based on headers
-- No additional dependencies required
+### smart-run-formats
+- 🚀 [smart-run-native/](./smart-run-formats/smart-run-native/)
+  - Native package-meta.yaml organized groups
+- ✨ [enhanced-format/](./smart-run-formats/enhanced-format/)
+  - Titles and emojis for improved UX
+- 🧩 [lifecycle-scripts/](./smart-run-formats/lifecycle-scripts/)
+  - Lifecycle vs regular script categorization
 
-### 📝 [npm-scripts-info/](./npm-scripts-info/)
-**[npm-scripts-info](https://github.com/srph/npm-scripts-info) configuration**
-- Uses `scripts-info` field for script descriptions
-- Shows compatibility with [npm-scripts-info](https://github.com/srph/npm-scripts-info) package
-- Simple key-value description format
-
-### 🎯 [better-scripts/](./better-scripts/)
-**[better-scripts](https://github.com/iamyoki/better-scripts) configuration**
-- Demonstrates object, array, and string formats
-- Shows alias extraction to title/emoji fields
-- Includes the non-standard `"scripts": "better-scripts"` approach
-
-### 🚀 [smart-run-native/](./smart-run-native/)
-**smart-run native configuration**
-- Uses `package-meta.yaml` for organized script groups
-- Shows the recommended configuration format
-- Demonstrates logical script organization
-
-### ✨ [enhanced-format/](./enhanced-format/)
-**Enhanced smart-run configuration**
-- Showcases new `title` and `emoji` fields
-- Visual enhancements for better UX
-- Modern approach to script presentation
+### monorepo-workspaces
+- 🧭 [monorepo-basic/](./monorepo-workspaces/monorepo-basic/)
+  - Basic pnpm workspace illustrating package discovery
 
 ## Running the Demos
 
-### From the main project directory:
+Use the interactive menu:
 
 ```bash
-# Run individual demos
-npm run demo:basic
-npm run demo:ntl
-npm run demo:npm-org
-npm run demo:npm-info
-npm run demo:better
-npm run demo:native
-npm run demo:enhanced
-
-# Run all demos sequentially
-npm run demo:all
+npm run demo
 ```
 
-### From within each demo directory:
+Or run inside a specific demo directory, for example:
 
 ```bash
-cd demo/basic-scripts
+cd demo/zero-config/basic-scripts
 npx smart-run
 ```
 
@@ -75,29 +50,19 @@ npx smart-run
 
 | Demo | Configuration | Grouping | Descriptions | Visual Features |
 |------|---------------|----------|--------------|-----------------|
-| **basic-scripts** | None | ❌ | Script commands | ❌ |
-| **ntl-format** | ntl.descriptions | ❌ | ✅ | ❌ |
-| **npm-scripts-org** | Header comments | ✅ | Script commands | ❌ |
-| **npm-scripts-info** | scripts-info field | ❌ | ✅ | ❌ |
-| **better-scripts** | better-scripts field | ❌ | ✅ | Aliases |
-| **smart-run-native** | package-meta.yaml | ✅ | ✅ | ❌ |
-| **enhanced-format** | package-meta.yaml | ✅ | ✅ | ✅ Titles & Emojis |
+| zero-config/basic-scripts | None | ❌ | Script commands | ❌ |
+| external-formats/ntl-format | ntl.descriptions | ❌ | ✅ | ❌ |
+| external-formats/npm-scripts-org | Header comments | ✅ | Script commands | ❌ |
+| external-formats/npm-scripts-info | scripts-info field | ❌ | ✅ | ❌ |
+| external-formats/better-scripts | better-scripts field | ❌ | ✅ | Aliases |
+| smart-run-formats/smart-run-native | package-meta.yaml | ✅ | ✅ | ❌ |
+| smart-run-formats/enhanced-format | package-meta.yaml | ✅ | ✅ | ✅ Titles & Emojis |
 
 ## Migration Path
 
-The demos are ordered to show a logical migration path:
+1. Start: zero-config/basic-scripts → Any existing project
+2. Add descriptions: external-formats/ntl-format or external-formats/npm-scripts-info
+3. Add organization: external-formats/npm-scripts-org or smart-run-formats/smart-run-native
+4. Enhanced UX: smart-run-formats/enhanced-format with titles and emojis
 
-1. **Start**: basic-scripts → Any existing project
-2. **Add descriptions**: ntl-format or npm-scripts-info
-3. **Add organization**: npm-scripts-org or smart-run-native
-4. **Enhanced experience**: enhanced-format with visual improvements
-
-## Features Demonstrated
-
-- **Automatic detection** of different configuration formats
-- **Backward compatibility** with existing npm script tools
-- **Enhanced UX** with titles, emojis, and organized groups
-- **Migration capabilities** from any format to smart-run native
-- **Visual presentation** improvements over standard npm scripts
-
-Each demo is self-contained and can be run independently to see how smart-run handles that specific configuration format. 
+Each demo is self-contained and can be run independently to see how smart-run handles that specific configuration format.

@@ -72,7 +72,7 @@ export async function runAIAnalysis(options: { disableColors?: boolean } = {}): 
     console.log('   2. Or set an environment variable before running smart-run:');
     console.log('      export OPENAI_API_KEY=sk-xxxxx');
     console.log('      smart-run ai\n');
-    
+
     // Ask if user wants to continue with manual analysis
     const { continueMethod } = await inquirer.prompt([
       {
@@ -90,7 +90,7 @@ export async function runAIAnalysis(options: { disableColors?: boolean } = {}): 
       console.log('👋 Analysis cancelled.');
       return;
     }
-    
+
     await handleManualAnalysis(aiService, validScripts);
     return;
   }
@@ -192,7 +192,8 @@ async function handleAIAnalysis(
         let packageJsonPath = 'package.json';
         if (!fs.existsSync(packageJsonPath)) {
           const demoPath = 'package.demo.json';
-          if (fs.existsSync(demoPath)) {
+          const { isInsideSmartRunRepo } = await import('./index.js');
+          if (isInsideSmartRunRepo() && fs.existsSync(demoPath)) {
             packageJsonPath = demoPath;
           }
         }

@@ -1,0 +1,11 @@
+{
+  "name": "monorepo-app",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "echo app start",
+    "build": "echo app build",
+    "test": "echo app test"
+  }
+}
+
+

@@ -15,7 +15,7 @@ describe('List Scripts Command', () => {
     try {
       // Change to demo directory for testing
       const originalCwd = process.cwd();
-      const demoPath = path.join(__dirname, '../demo/lifecycle-scripts');
+      const demoPath = path.join(__dirname, '../demo/smart-run-formats/lifecycle-scripts');
       process.chdir(demoPath);
 
       await runListScripts({ disableColors: true });
@@ -59,7 +59,7 @@ describe('List Scripts Command', () => {
     try {
       // Change to demo directory for testing
       const originalCwd = process.cwd();
-      const demoPath = path.join(__dirname, '../demo/basic-scripts');
+      const demoPath = path.join(__dirname, '../demo/zero-config/basic-scripts');
       process.chdir(demoPath);
 
       await runListScripts({ json: true });
@@ -136,7 +136,7 @@ describe('List Scripts Command', () => {
     try {
       // Change to demo directory that has organized scripts
       const originalCwd = process.cwd();
-      const demoPath = path.join(__dirname, '../demo/lifecycle-scripts');
+      const demoPath = path.join(__dirname, '../demo/smart-run-formats/lifecycle-scripts');
       process.chdir(demoPath);
 
       await runListScripts({ json: true });
@@ -178,7 +178,7 @@ describe('List Scripts Command', () => {
     try {
       // Change to demo directory for testing
       const originalCwd = process.cwd();
-      const demoPath = path.join(__dirname, '../demo/lifecycle-scripts');
+      const demoPath = path.join(__dirname, '../demo/smart-run-formats/lifecycle-scripts');
       process.chdir(demoPath);
 
       await runListScripts({ json: true });

@@ -114,7 +114,7 @@ describe('Migration Tests', () => {
     });
 
     test('should migrate real ntl-format demo', () => {
-      const packagePath = path.join(demoDir, 'ntl-format/package.demo.json');
+      const packagePath = path.join(demoDir, 'external-formats/ntl-format/package.demo.json');
       const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
 
       const converted = convertNtlToSmartRun(packageJson);
@@ -160,7 +160,7 @@ describe('Migration Tests', () => {
     });
 
     test('should migrate real npm-scripts-info demo', () => {
-      const packagePath = path.join(demoDir, 'npm-scripts-info/package.demo.json');
+      const packagePath = path.join(demoDir, 'external-formats/npm-scripts-info/package.demo.json');
       const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
 
       const converted = convertNpmScriptsInfoToSmartRun(packageJson);
@@ -238,7 +238,7 @@ describe('Migration Tests', () => {
     });
 
     test('should migrate real better-scripts demo', () => {
-      const packagePath = path.join(demoDir, 'better-scripts/package.demo.json');
+      const packagePath = path.join(demoDir, 'external-formats/better-scripts/package.demo.json');
       const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
 
       const converted = convertBetterScriptsToSmartRun(packageJson);
@@ -285,7 +285,7 @@ describe('Migration Tests', () => {
     });
 
     test('should migrate real npm-scripts-org demo', () => {
-      const packagePath = path.join(demoDir, 'npm-scripts-org/package.demo.json');
+      const packagePath = path.join(demoDir, 'external-formats/npm-scripts-org/package.demo.json');
       const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
 
       const converted = convertNpmScriptsOrgToSmartRun(packageJson);
@@ -304,11 +304,11 @@ describe('Migration Tests', () => {
   describe('Full Migration Workflow', () => {
     test('should migrate all demo configurations', () => {
       const demos = [
-        { folder: 'ntl-format', expectedType: 'ntl' },
-        { folder: 'npm-scripts-info', expectedType: 'npm-scripts-info' },
-        { folder: 'better-scripts', expectedType: 'better-scripts' },
-        { folder: 'npm-scripts-org', expectedType: 'npm-scripts-org' },
-        { folder: 'basic-scripts', expectedType: 'basic' },
+        { folder: 'external-formats/ntl-format', expectedType: 'ntl' },
+        { folder: 'external-formats/npm-scripts-info', expectedType: 'npm-scripts-info' },
+        { folder: 'external-formats/better-scripts', expectedType: 'better-scripts' },
+        { folder: 'external-formats/npm-scripts-org', expectedType: 'npm-scripts-org' },
+        { folder: 'zero-config/basic-scripts', expectedType: 'basic' },
       ];
 
       demos.forEach(({ folder, expectedType }) => {
@@ -331,7 +331,7 @@ describe('Migration Tests', () => {
     });
 
     test('should preserve complex command lines during migration', () => {
-      const packagePath = path.join(demoDir, 'ntl-format/package.demo.json');
+      const packagePath = path.join(demoDir, 'external-formats/ntl-format/package.demo.json');
       const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
 
       const migrated = migrateToSmartRun(packageJson);
@@ -375,7 +375,7 @@ describe('Migration Tests', () => {
 
   describe('Migration Output Validation', () => {
     test('migrated configurations should be valid smart-run format', () => {
-      const packagePath = path.join(demoDir, 'better-scripts/package.demo.json');
+      const packagePath = path.join(demoDir, 'external-formats/better-scripts/package.demo.json');
       const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
 
       const migrated = migrateToSmartRun(packageJson);
@@ -405,7 +405,7 @@ describe('Migration Tests', () => {
     });
 
     test('should generate valid package-meta.yaml output', () => {
-      const packagePath = path.join(demoDir, 'npm-scripts-org/package.demo.json');
+      const packagePath = path.join(demoDir, 'external-formats/npm-scripts-org/package.demo.json');
       const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
 
       const migrated = migrateToSmartRun(packageJson);

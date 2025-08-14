@@ -40,13 +40,13 @@ describe('Demo Validation Tests', () => {
   describe('File Structure Validation', () => {
     test('all demo folders should exist with correct structure', () => {
       const expectedFolders = [
-        'basic-scripts',
-        'ntl-format',
-        'npm-scripts-org',
-        'npm-scripts-info',
-        'better-scripts',
-        'smart-run-native',
-        'enhanced-format',
+        'zero-config/basic-scripts',
+        'external-formats/ntl-format',
+        'external-formats/npm-scripts-org',
+        'external-formats/npm-scripts-info',
+        'external-formats/better-scripts',
+        'smart-run-formats/smart-run-native',
+        'smart-run-formats/enhanced-format',
       ];
 
       expectedFolders.forEach((folder) => {
@@ -61,7 +61,10 @@ describe('Demo Validation Tests', () => {
     });
 
     test('package-meta.yaml should exist for native demos', () => {
-      const nativeDemos = ['smart-run-native', 'enhanced-format'];
+      const nativeDemos = [
+        'smart-run-formats/smart-run-native',
+        'smart-run-formats/enhanced-format',
+      ];
 
       nativeDemos.forEach((folder) => {
         const metaPath = path.join(demoDir, folder, 'package-meta.yaml');
@@ -87,13 +90,13 @@ describe('Demo Validation Tests', () => {
   describe('Package.demo.json Validation', () => {
     test('all package.demo.json files should be valid JSON', () => {
       const demoFolders = [
-        'basic-scripts',
-        'ntl-format',
-        'npm-scripts-org',
-        'npm-scripts-info',
-        'better-scripts',
-        'smart-run-native',
-        'enhanced-format',
+        'zero-config/basic-scripts',
+        'external-formats/ntl-format',
+        'external-formats/npm-scripts-org',
+        'external-formats/npm-scripts-info',
+        'external-formats/better-scripts',
+        'smart-run-formats/smart-run-native',
+        'smart-run-formats/enhanced-format',
       ];
 
       demoFolders.forEach((folder) => {
@@ -107,13 +110,13 @@ describe('Demo Validation Tests', () => {
 
     test('all package.demo.json files should have required fields', () => {
       const demoFolders = [
-        'basic-scripts',
-        'ntl-format',
-        'npm-scripts-org',
-        'npm-scripts-info',
-        'better-scripts',
-        'smart-run-native',
-        'enhanced-format',
+        'zero-config/basic-scripts',
+        'external-formats/ntl-format',
+        'external-formats/npm-scripts-org',
+        'external-formats/npm-scripts-info',
+        'external-formats/better-scripts',
+        'smart-run-formats/smart-run-native',
+        'smart-run-formats/enhanced-format',
       ];
 
       demoFolders.forEach((folder) => {
@@ -134,13 +137,13 @@ describe('Demo Validation Tests', () => {
 
     test('all scripts should be valid commands', () => {
       const demoFolders = [
-        'basic-scripts',
-        'ntl-format',
-        'npm-scripts-org',
-        'npm-scripts-info',
-        'better-scripts',
-        'smart-run-native',
-        'enhanced-format',
+        'zero-config/basic-scripts',
+        'external-formats/ntl-format',
+        'external-formats/npm-scripts-org',
+        'external-formats/npm-scripts-info',
+        'external-formats/better-scripts',
+        'smart-run-formats/smart-run-native',
+        'smart-run-formats/enhanced-format',
       ];
 
       demoFolders.forEach((folder) => {
@@ -169,7 +172,7 @@ describe('Demo Validation Tests', () => {
 
   describe('Configuration Format Validation', () => {
     test('ntl-format should have valid ntl configuration', () => {
-      const packagePath = path.join(demoDir, 'ntl-format/package.demo.json');
+      const packagePath = path.join(demoDir, 'external-formats/ntl-format/package.demo.json');
       const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8')) as PackageJson;
 
       expect(packageJson.ntl).toBeDefined();
@@ -185,7 +188,7 @@ describe('Demo Validation Tests', () => {
     });
 
     test('npm-scripts-info should have valid scripts-info configuration', () => {
-      const packagePath = path.join(demoDir, 'npm-scripts-info/package.demo.json');
+      const packagePath = path.join(demoDir, 'external-formats/npm-scripts-info/package.demo.json');
       const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8')) as PackageJson;
 
       expect(packageJson['scripts-info']).toBeDefined();
@@ -200,7 +203,7 @@ describe('Demo Validation Tests', () => {
     });
 
     test('better-scripts should have valid better-scripts configuration', () => {
-      const packagePath = path.join(demoDir, 'better-scripts/package.demo.json');
+      const packagePath = path.join(demoDir, 'external-formats/better-scripts/package.demo.json');
       const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8')) as PackageJson;
 
       expect(packageJson.scripts.scripts).toBe('better-scripts');
@@ -227,7 +230,7 @@ describe('Demo Validation Tests', () => {
     });
 
     test('npm-scripts-org should have valid organization comments', () => {
-      const packagePath = path.join(demoDir, 'npm-scripts-org/package.demo.json');
+      const packagePath = path.join(demoDir, 'external-formats/npm-scripts-org/package.demo.json');
       const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8')) as PackageJson;
 
       const scriptNames = Object.keys(packageJson.scripts);
@@ -244,7 +247,7 @@ describe('Demo Validation Tests', () => {
 
   describe('Package-meta.yaml Validation', () => {
     test('smart-run-native should have valid package-meta.yaml', () => {
-      const metaPath = path.join(demoDir, 'smart-run-native/package-meta.yaml');
+      const metaPath = path.join(demoDir, 'smart-run-formats/smart-run-native/package-meta.yaml');
       const packageMeta = yaml.load(fs.readFileSync(metaPath, 'utf8')) as PackageMeta;
 
       expect(packageMeta.scriptGroups).toBeDefined();
@@ -267,7 +270,7 @@ describe('Demo Validation Tests', () => {
     });
 
     test('enhanced-format should have valid enhanced package-meta.yaml', () => {
-      const metaPath = path.join(demoDir, 'enhanced-format/package-meta.yaml');
+      const metaPath = path.join(demoDir, 'smart-run-formats/enhanced-format/package-meta.yaml');
       const packageMeta = yaml.load(fs.readFileSync(metaPath, 'utf8')) as PackageMeta;
 
       expect(packageMeta.scriptGroups).toBeDefined();
@@ -302,13 +305,13 @@ describe('Demo Validation Tests', () => {
 
   describe('Command Complexity Validation', () => {
     const demoFolders = [
-      'basic-scripts',
-      'ntl-format',
-      'npm-scripts-org',
-      'npm-scripts-info',
-      'better-scripts',
-      'smart-run-native',
-      'enhanced-format',
+      'zero-config/basic-scripts',
+      'external-formats/ntl-format',
+      'external-formats/npm-scripts-org',
+      'external-formats/npm-scripts-info',
+      'external-formats/better-scripts',
+      'smart-run-formats/smart-run-native',
+      'smart-run-formats/enhanced-format',
     ];
 
     // Helper to fetch a command string regardless of config style

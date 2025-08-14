@@ -104,7 +104,7 @@ describe('Demo Integration Tests', () => {
 
   describe('Basic Scripts Integration', () => {
     test('should load and display basic scripts without configuration', async () => {
-      const output = await runSmartRunInDemo('basic-scripts');
+      const output = await runSmartRunInDemo('zero-config/basic-scripts');
 
       // Should show scripts without descriptions
       expect(output).toContain('start');
@@ -119,7 +119,7 @@ describe('Demo Integration Tests', () => {
     });
 
     test('should handle script execution in basic mode', async () => {
-      const output = await runSmartRunInDemo('basic-scripts');
+      const output = await runSmartRunInDemo('zero-config/basic-scripts');
 
       // Should indicate it would run the selected script
       expect(output.includes('start') || output.includes('webpack')).toBe(true);
@@ -128,7 +128,7 @@ describe('Demo Integration Tests', () => {
 
   describe('NTL Format Integration', () => {
     test('should load and display ntl descriptions with emojis', async () => {
-      const output = await runSmartRunInDemo('ntl-format');
+      const output = await runSmartRunInDemo('external-formats/ntl-format');
 
       // Should show emoji descriptions from ntl.descriptions
       expect(output).toContain('🚀');
@@ -139,7 +139,7 @@ describe('Demo Integration Tests', () => {
     });
 
     test('should prioritize ntl descriptions over raw commands', async () => {
-      const output = await runSmartRunInDemo('ntl-format');
+      const output = await runSmartRunInDemo('external-formats/ntl-format');
 
       // Should show friendly descriptions, not raw webpack commands
       expect(output).toContain('Start development server');
@@ -149,7 +149,7 @@ describe('Demo Integration Tests', () => {
 
   describe('NPM Scripts Organization Integration', () => {
     test('should organize scripts by category headers', async () => {
-      const output = await runSmartRunInDemo('npm-scripts-org');
+      const output = await runSmartRunInDemo('external-formats/npm-scripts-org');
 
       // Should show organized categories
       expect(output.includes('DEVELOPMENT') || output.includes('Development')).toBe(true);
@@ -159,7 +159,7 @@ describe('Demo Integration Tests', () => {
     });
 
     test('should group scripts under appropriate categories', async () => {
-      const output = await runSmartRunInDemo('npm-scripts-org');
+      const output = await runSmartRunInDemo('external-formats/npm-scripts-org');
 
       // Development scripts should be grouped together
       expect(output).toContain('start');
@@ -173,7 +173,7 @@ describe('Demo Integration Tests', () => {
 
   describe('NPM Scripts Info Integration', () => {
     test('should load and display scripts-info descriptions', async () => {
-      const output = await runSmartRunInDemo('npm-scripts-info');
+      const output = await runSmartRunInDemo('external-formats/npm-scripts-info');
 
       // Should show emoji descriptions from scripts-info
       expect(output).toContain('🚀');
@@ -184,9 +184,9 @@ describe('Demo Integration Tests', () => {
     });
 
     test('should handle all scripts with descriptions', async () => {
-      const packagePath = path.join(demoDir, 'npm-scripts-info/package.demo.json');
+      const packagePath = path.join(demoDir, 'external-formats/npm-scripts-info/package.demo.json');
       const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
-      const output = await runSmartRunInDemo('npm-scripts-info');
+      const output = await runSmartRunInDemo('external-formats/npm-scripts-info');
 
       // All scripts should have descriptions
       Object.keys(packageJson.scripts).forEach((scriptName) => {
@@ -197,7 +197,7 @@ describe('Demo Integration Tests', () => {
 
   describe('Better Scripts Integration', () => {
     test('should load and display better-scripts with aliases', async () => {
-      const output = await runSmartRunInDemo('better-scripts');
+      const output = await runSmartRunInDemo('external-formats/better-scripts');
 
       // Should show alias titles with emojis
       expect(output.includes('🚀') && output.includes('Dev Server')).toBe(true);
@@ -207,7 +207,7 @@ describe('Demo Integration Tests', () => {
     });
 
     test('should handle mixed better-scripts formats', async () => {
-      const output = await runSmartRunInDemo('better-scripts');
+      const output = await runSmartRunInDemo('external-formats/better-scripts');
 
       // Should handle object format (with alias)
       expect(output.includes('Dev Server') || output.includes('🚀')).toBe(true);
@@ -222,7 +222,7 @@ describe('Demo Integration Tests', () => {
 
   describe('Smart Run Native Integration', () => {
     test('should load package-meta.yaml configuration', async () => {
-      const output = await runSmartRunInDemo('smart-run-native');
+      const output = await runSmartRunInDemo('smart-run-formats/smart-run-native');
 
       // Should show organized groups from package-meta.yaml
       expect(output.includes('Development') || output.includes('🚀')).toBe(true);
@@ -232,7 +232,7 @@ describe('Demo Integration Tests', () => {
     });
 
     test('should display scripts with native descriptions', async () => {
-      const output = await runSmartRunInDemo('smart-run-native');
+      const output = await runSmartRunInDemo('smart-run-formats/smart-run-native');
 
       // Should show descriptive names, not raw commands
       expect(output.includes('development server') || output.includes('Start')).toBe(true);
@@ -243,7 +243,7 @@ describe('Demo Integration Tests', () => {
 
   describe('Enhanced Format Integration', () => {
     test('should load enhanced package-meta.yaml with titles and emojis', async () => {
-      const output = await runSmartRunInDemo('enhanced-format');
+      const output = await runSmartRunInDemo('smart-run-formats/enhanced-format');
 
       // Should show enhanced titles
       expect(output.includes('Dev Server') || output.includes('🚀')).toBe(true);
@@ -253,7 +253,7 @@ describe('Demo Integration Tests', () => {
     });
 
     test('should display enhanced format with title and emoji', async () => {
-      const output = await runSmartRunInDemo('enhanced-format');
+      const output = await runSmartRunInDemo('smart-run-formats/enhanced-format');
 
       // Should show format: "🚀 Dev Server - Start development server..."
       const hasDevServer = /🚀.*Dev Server.*development server/i.test(output);
@@ -263,7 +263,7 @@ describe('Demo Integration Tests', () => {
     });
 
     test('should handle storybook script in enhanced format', async () => {
-      const output = await runSmartRunInDemo('enhanced-format');
+      const output = await runSmartRunInDemo('smart-run-formats/enhanced-format');
 
       // Should show storybook with enhanced formatting
       const hasStorybookText = output.includes('Storybook');
@@ -279,7 +279,7 @@ describe('Demo Integration Tests', () => {
 
   describe('Lifecycle Scripts Integration', () => {
     test('should display lifecycle scripts when enabled in configuration', async () => {
-      const output = await runSmartRunInDemo('lifecycle-scripts');
+      const output = await runSmartRunInDemo('smart-run-formats/lifecycle-scripts');
 
       // Should show lifecycle scripts header
       const hasLifecycleIcon = output.includes('🔄');
@@ -309,13 +309,13 @@ describe('Demo Integration Tests', () => {
   describe('Cross-Demo Consistency', () => {
     test('all demos should handle complex commands gracefully', async () => {
       const demoFolders = [
-        'basic-scripts',
-        'ntl-format',
-        'npm-scripts-org',
-        'npm-scripts-info',
-        'better-scripts',
-        'smart-run-native',
-        'enhanced-format',
+        'zero-config/basic-scripts',
+        'external-formats/ntl-format',
+        'external-formats/npm-scripts-org',
+        'external-formats/npm-scripts-info',
+        'external-formats/better-scripts',
+        'smart-run-formats/smart-run-native',
+        'smart-run-formats/enhanced-format',
       ];
 
       for (const folder of demoFolders) {
@@ -338,12 +338,12 @@ describe('Demo Integration Tests', () => {
 
     test('all demos should show organized output', async () => {
       const demoFolders = [
-        'ntl-format',
-        'npm-scripts-org',
-        'npm-scripts-info',
-        'better-scripts',
-        'smart-run-native',
-        'enhanced-format',
+        'external-formats/ntl-format',
+        'external-formats/npm-scripts-org',
+        'external-formats/npm-scripts-info',
+        'external-formats/better-scripts',
+        'smart-run-formats/smart-run-native',
+        'smart-run-formats/enhanced-format',
       ];
 
       for (const folder of demoFolders) {
@@ -361,13 +361,13 @@ describe('Demo Integration Tests', () => {
 
     test('all demos should handle script selection', async () => {
       const demoFolders = [
-        'basic-scripts',
-        'ntl-format',
-        'npm-scripts-org',
-        'npm-scripts-info',
-        'better-scripts',
-        'smart-run-native',
-        'enhanced-format',
+        'zero-config/basic-scripts',
+        'external-formats/ntl-format',
+        'external-formats/npm-scripts-org',
+        'external-formats/npm-scripts-info',
+        'external-formats/better-scripts',
+        'smart-run-formats/smart-run-native',
+        'smart-run-formats/enhanced-format',
       ];
 
       for (const folder of demoFolders) {
@@ -386,38 +386,53 @@ describe('Demo Integration Tests', () => {
     test('should detect and migrate different configuration formats', () => {
       // Test ntl detection
       const ntlPackage = JSON.parse(
-        fs.readFileSync(path.join(demoDir, 'ntl-format/package.demo.json'), 'utf8')
+        fs.readFileSync(path.join(demoDir, 'external-formats/ntl-format/package.demo.json'), 'utf8')
       );
       expect(detectConfigurationType(ntlPackage)).toBe('ntl');
 
       // Test npm-scripts-info detection
       const scriptsInfoPackage = JSON.parse(
-        fs.readFileSync(path.join(demoDir, 'npm-scripts-info/package.demo.json'), 'utf8')
+        fs.readFileSync(
+          path.join(demoDir, 'external-formats/npm-scripts-info/package.demo.json'),
+          'utf8'
+        )
       );
       expect(detectConfigurationType(scriptsInfoPackage)).toBe('npm-scripts-info');
 
       // Test better-scripts detection
       const betterScriptsPackage = JSON.parse(
-        fs.readFileSync(path.join(demoDir, 'better-scripts/package.demo.json'), 'utf8')
+        fs.readFileSync(
+          path.join(demoDir, 'external-formats/better-scripts/package.demo.json'),
+          'utf8'
+        )
       );
       expect(detectConfigurationType(betterScriptsPackage)).toBe('better-scripts');
 
       // Test npm-scripts-org detection
       const scriptsOrgPackage = JSON.parse(
-        fs.readFileSync(path.join(demoDir, 'npm-scripts-org/package.demo.json'), 'utf8')
+        fs.readFileSync(
+          path.join(demoDir, 'external-formats/npm-scripts-org/package.demo.json'),
+          'utf8'
+        )
       );
       expect(detectConfigurationType(scriptsOrgPackage)).toBe('npm-scripts-org');
 
       // Test basic scripts detection
       const basicPackage = JSON.parse(
-        fs.readFileSync(path.join(demoDir, 'basic-scripts/package.demo.json'), 'utf8')
+        fs.readFileSync(path.join(demoDir, 'zero-config/basic-scripts/package.demo.json'), 'utf8')
       );
       expect(detectConfigurationType(basicPackage)).toBe('basic');
     });
 
     test('should handle package-meta.yaml detection', () => {
-      const nativeMetaPath = path.join(demoDir, 'smart-run-native/package-meta.yaml');
-      const enhancedMetaPath = path.join(demoDir, 'enhanced-format/package-meta.yaml');
+      const nativeMetaPath = path.join(
+        demoDir,
+        'smart-run-formats/smart-run-native/package-meta.yaml'
+      );
+      const enhancedMetaPath = path.join(
+        demoDir,
+        'smart-run-formats/enhanced-format/package-meta.yaml'
+      );
 
       expect(fs.existsSync(nativeMetaPath)).toBe(true);
       expect(fs.existsSync(enhancedMetaPath)).toBe(true);
