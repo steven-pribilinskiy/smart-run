@@ -1,5 +1,5 @@
-import type { PackageJson, ScriptGroup } from '../../types.js';
 import { extractDescriptionFromEcho } from '../../core/scripts.js';
+import type { PackageJson, ScriptGroup } from '../../types.js';
 
 export function convertNpmScriptsInfoToSmartRun(pkg: PackageJson): {
   scripts: Record<string, { description: string; emoji?: string }>;

@@ -1,8 +1,8 @@
 import * as fs from 'node:fs';
 import { readFileSync, writeFileSync } from 'node:fs';
 import yaml from 'js-yaml';
-import type { ScriptGroup } from '../types.js';
 import { isInsideSmartRunRepo } from '../core/repo.js';
+import type { ScriptGroup } from '../types.js';
 
 export async function saveConfiguration(
   scriptGroups: ScriptGroup[],

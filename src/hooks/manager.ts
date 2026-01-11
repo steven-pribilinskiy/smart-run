@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import { generateHookContent } from './content.js';
-import { ensureHooksDirectory, isExecutable, isGitRepository, resolveHookPath } from './utils.js';
 import type { HookResult, HookStatus, InstallOptions, UninstallOptions } from './types.js';
+import { ensureHooksDirectory, isExecutable, isGitRepository, resolveHookPath } from './utils.js';
 
 export class GitHooksManager {
   private hooksDir: string;

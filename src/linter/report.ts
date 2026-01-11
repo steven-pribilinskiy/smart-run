@@ -19,7 +19,9 @@ export function formatReport(report: LintReport): string {
     const icon = level === 'error' ? '❌' : level === 'warning' ? '⚠️' : 'ℹ️';
     lines.push(`${icon} ${level.toUpperCase()} (${levelIssues.length})`);
     lines.push('─'.repeat(30));
-    levelIssues.forEach((i) => lines.push(`  ${i.message}`));
+    for (const i of levelIssues) {
+      lines.push(`  ${i.message}`);
+    }
     lines.push('');
   });
   if (summary.total > 0) {

@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 
-import { readFileSync, existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { Command } from 'commander';
-import { runSmartRun } from './index.js';
 import { isInsideSmartRunRepo as isInsideSmartRunRepoFromIndex } from './index.js';
 
 // Read package.json to get version and homepage

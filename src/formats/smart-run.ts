@@ -1,5 +1,5 @@
-import type { IScriptFormat } from './registry.js';
 import type { PackageJson, ScriptGroup } from '../types.js';
+import type { IScriptFormat } from './registry.js';
 
 export const SmartRunFormat: IScriptFormat = {
   name: 'smart-run',

@@ -1,6 +1,6 @@
+import type { PackageJson } from '../types.js';
 import { fileExists, readJsonFile, resolveFromCwd } from './fs.js';
 import { isInsideSmartRunRepo } from './repo.js';
-import type { PackageJson } from '../types.js';
 
 export function getPackageJson(): PackageJson {
   let pkgPath = resolveFromCwd('package.json');
