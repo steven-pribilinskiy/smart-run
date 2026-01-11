@@ -5,6 +5,11 @@ import yaml from 'js-yaml';
 import { runSmartRun } from '../src/index.js';
 import { detectConfigurationType, type ScriptGroup } from '../src/migration.js';
 
+type AutocompleteOptions = {
+  message: string;
+  source: (input?: string) => Promise<{ name: string; value: string }[]>;
+};
+
 type InquirerQuestion = {
   name: string;
   type?: string;
@@ -12,30 +17,18 @@ type InquirerQuestion = {
   choices?: unknown[];
 };
 
-type AutocompleteOptions = {
-  message: string;
-  source: (input?: string) => Promise<{ name: string; value: string }[]>;
-};
-
-// Mock inquirer to avoid interactive prompts during tests
-const mockInquirer = {
-  prompt: (questions: InquirerQuestion[]) => {
-    // Mock different prompt types based on the question
-    if (Array.isArray(questions)) {
-      const question = questions[0];
-      if (question.name === 'setupMethod') {
-        // Auto-select "continue" when setup dialog appears
-        return Promise.resolve({ setupMethod: 'continue' });
-      }
-      if (question.name === 'script') {
-        // Auto-select exit to avoid executing actual scripts
-        return Promise.resolve({ script: 'exit' });
-      }
+// Mock inquirer.prompt to avoid interactive prompts during tests
+const mockPrompt = (questions: InquirerQuestion[]) => {
+  if (Array.isArray(questions)) {
+    const question = questions[0];
+    if (question.name === 'setupMethod') {
+      return Promise.resolve({ setupMethod: 'continue' });
     }
-
-    // Default fallback
-    return Promise.resolve({ scriptName: 'start' });
-  },
+    if (question.name === 'script') {
+      return Promise.resolve({ script: 'exit' });
+    }
+  }
+  return Promise.resolve({ scriptName: 'start' });
 };
 
 // Mock autocomplete function to avoid interactive prompts
@@ -71,15 +64,15 @@ describe('Demo Integration Tests', () => {
         output += `${args.join(' ')}\n`;
       };
 
-      // Mock global autocomplete and inquirer before importing
-      const originalInquirer = await import('inquirer');
-      const inquirer = originalInquirer.default;
-      const originalPrompt = inquirer.prompt;
-
-      // Set up mocks
-      inquirer.prompt = mockInquirer.prompt as unknown as typeof inquirer.prompt;
-
-      // Mock autocomplete in global scope
+      // Mock inquirer.prompt and autocomplete in global scope
+      const inquirerModule = await import('inquirer');
+      const originalPrompt = inquirerModule.default.prompt;
+      // Use Object.defineProperty to override the read-only prompt
+      Object.defineProperty(inquirerModule.default, 'prompt', {
+        value: mockPrompt,
+        writable: true,
+        configurable: true,
+      });
       (globalThis as Record<string, unknown>).mockAutocomplete = mockAutocomplete;
 
       try {
@@ -88,7 +81,11 @@ describe('Demo Integration Tests', () => {
         return output;
       } finally {
         console.log = originalConsole;
-        inquirer.prompt = originalPrompt;
+        Object.defineProperty(inquirerModule.default, 'prompt', {
+          value: originalPrompt,
+          writable: true,
+          configurable: true,
+        });
         delete (globalThis as Record<string, unknown>).mockAutocomplete;
       }
     } catch (error) {

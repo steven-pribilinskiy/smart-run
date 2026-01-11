@@ -1,19 +1,19 @@
 import inquirer from 'inquirer';
-import type { PackageJson, ScriptGroup } from '../types.js';
 import { getPackageJson } from '../core/package.js';
-import { detectExistingConfigurations, detectConfigurationType } from './detect.js';
+import type { PackageJson, ScriptGroup } from '../types.js';
+import { enhanceWithAI } from './ai.js';
+import { convertBetterScriptsToSmartRun } from './convert/better-scripts.js';
 import {
-  convertNpmScriptsToSmartRun,
   convertNpmScriptsOrgToSmartRun,
+  convertNpmScriptsToSmartRun,
 } from './convert/npm-scripts.js';
 import { convertNtlToSmartRun } from './convert/ntl.js';
+import { convertScriptsDescriptionToSmartRun } from './convert/scripts-description.js';
 import {
   convertNpmScriptsInfoToSmartRun,
   convertScriptsInfoToSmartRun,
 } from './convert/scripts-info.js';
-import { convertScriptsDescriptionToSmartRun } from './convert/scripts-description.js';
-import { convertBetterScriptsToSmartRun } from './convert/better-scripts.js';
-import { enhanceWithAI } from './ai.js';
+import { detectConfigurationType, detectExistingConfigurations } from './detect.js';
 import { saveConfiguration } from './save.js';
 
 export function migrateToSmartRun(pkg: PackageJson): {
@@ -64,7 +64,9 @@ export async function runMigration(): Promise<void> {
     return;
   }
   console.log('📋 Found existing configurations:');
-  existing.forEach((c, i) => console.log(`   ${i + 1}. ${c.description}`));
+  for (let i = 0; i < existing.length; i++) {
+    console.log(`   ${i + 1}. ${existing[i].description}`);
+  }
   console.log();
   const { selectedConfig } = await inquirer.prompt([
     {

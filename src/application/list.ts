@@ -1,8 +1,8 @@
-import { runListScripts } from '../list-scripts.js';
 import { createDefaultRegistry } from '../formats/registry.js';
+import { runListScripts } from '../list-scripts.js';
+import { aggregateWorkspace } from '../monorepo/aggregate.js';
 import { findWorkspaceRoot } from '../monorepo/detect.js';
 import { discoverPackageManifests } from '../monorepo/discover.js';
-import { aggregateWorkspace } from '../monorepo/aggregate.js';
 
 export async function listScripts(
   options: { json?: boolean; disableColors?: boolean } = {}
@@ -23,7 +23,9 @@ export async function listScripts(
       console.log(`\n🔹 ${p.name} (${p.path})`);
       p.groups.forEach((g) => {
         console.log(`  📁 ${g.name}`);
-        g.scripts.forEach((s) => console.log(`    - [${s.key}] ${s.description}`));
+        for (const s of g.scripts) {
+          console.log(`    - [${s.key}] ${s.description}`);
+        }
       });
     });
   }

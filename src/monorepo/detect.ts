@@ -42,6 +42,3 @@ export function findWorkspaceRoot(startDir: string = process.cwd()): WorkspaceIn
   }
   return null;
 }
-
-
-

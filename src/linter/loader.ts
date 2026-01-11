@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import yaml from 'js-yaml';
-import type { PackageJsonForLinter, PackageMeta, LinterConfig } from './types.js';
+import type { LinterConfig, PackageJsonForLinter, PackageMeta } from './types.js';
 
 export function loadConfig(configPath: string): PackageMeta {
   if (!fs.existsSync(configPath)) throw new Error(`Configuration file not found: ${configPath}`);

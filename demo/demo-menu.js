@@ -192,7 +192,7 @@ async function main() {
     displayMenu();
 
     const choice = await promptUser();
-    const choiceNum = parseInt(choice);
+    const choiceNum = parseInt(choice, 10);
 
     if (choiceNum === 0) {
       console.log('\n👋 Thanks for trying smart-run demos!');

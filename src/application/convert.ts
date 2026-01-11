@@ -1,8 +1,8 @@
-import { createDefaultRegistry } from '../formats/registry.js';
-import { getPackageJson } from '../core/package.js';
-import type { ScriptGroup } from '../types.js';
 import * as fs from 'node:fs';
 import yaml from 'js-yaml';
+import { getPackageJson } from '../core/package.js';
+import { createDefaultRegistry } from '../formats/registry.js';
+import type { ScriptGroup } from '../types.js';
 
 export type ConvertOptions = {
   from?: string;

@@ -56,6 +56,3 @@ export function discoverPackageManifests(startDir: string = process.cwd()): Pack
   });
   return manifests;
 }
-
-
-

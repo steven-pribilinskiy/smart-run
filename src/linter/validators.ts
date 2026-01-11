@@ -4,7 +4,6 @@ import type {
   PackageJsonForLinter,
   PackageMeta,
   ScriptConfig,
-  ScriptGroup,
 } from './types.js';
 
 export function validateStructure(
@@ -33,9 +32,9 @@ export function validateStructure(
         add(issue('error', 'valid-structure', `Group "${group.name}" must have scripts array`));
         return;
       }
-      group.scripts.forEach((s, sIdx) =>
-        validateScript(s, sIdx, `group "${group.name}"`, config, cfg, add)
-      );
+      for (let sIdx = 0; sIdx < group.scripts.length; sIdx++) {
+        validateScript(group.scripts[sIdx], sIdx, `group "${group.name}"`, config, cfg, add);
+      }
     });
   }
   if (hasScripts) {
@@ -43,7 +42,9 @@ export function validateStructure(
       add(issue('error', 'valid-structure', 'scripts must be an array'));
       return;
     }
-    config.scripts.forEach((s, sIdx) => validateScript(s, sIdx, 'root scripts', config, cfg, add));
+    for (let sIdx = 0; sIdx < config.scripts.length; sIdx++) {
+      validateScript(config.scripts[sIdx], sIdx, 'root scripts', config, cfg, add);
+    }
   }
 }
 
@@ -67,9 +68,9 @@ export function validateAgainstPackage(
     if (configScripts.has(s.key)) duplicateScripts.add(s.key);
     configScripts.add(s.key);
   });
-  duplicateScripts.forEach((k) =>
-    add(issue('error', 'duplicate-scripts', `Script "${k}" defined multiple times`))
-  );
+  for (const k of duplicateScripts) {
+    add(issue('error', 'duplicate-scripts', `Script "${k}" defined multiple times`));
+  }
   configScripts.forEach((k) => {
     if (!packageScripts.has(k))
       add(issue('warning', 'unused-scripts', `Script "${k}" documented but not in package.json`));
@@ -145,7 +146,7 @@ function validateScript(
   script: ScriptConfig,
   idx: number,
   context: string,
-  config: PackageMeta,
+  _config: PackageMeta,
   cfg: LinterConfig,
   add: (i: LinterIssue) => void
 ): void {

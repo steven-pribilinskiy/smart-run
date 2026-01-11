@@ -5,7 +5,7 @@ export function readJsonFile<T>(filePath: string): T {
   try {
     return JSON.parse(fs.readFileSync(filePath, 'utf8')) as T;
   } catch {
-    throw new Error('Error parsing JSON file: ' + filePath);
+    throw new Error(`Error parsing JSON file: ${filePath}`);
   }
 }
 

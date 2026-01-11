@@ -1,8 +1,8 @@
-import type { ScriptGroup, PackageJson } from '../types.js';
 import { convertNpmScriptsToSmartRun } from '../migration/convert/npm-scripts.js';
 import { convertNtlToSmartRun } from '../migration/convert/ntl.js';
-import { convertScriptsInfoToSmartRun } from '../migration/convert/scripts-info.js';
 import { convertScriptsDescriptionToSmartRun } from '../migration/convert/scripts-description.js';
+import { convertScriptsInfoToSmartRun } from '../migration/convert/scripts-info.js';
+import type { PackageJson, ScriptGroup } from '../types.js';
 import { SmartRunFormat } from './smart-run.js';
 
 export interface IScriptFormat {
@@ -92,7 +92,7 @@ export function createDefaultRegistry(): FormatRegistry {
         name: 'Available Scripts',
         scripts: Object.keys(pkg.scripts || {})
           .filter((k) => !k.startsWith('\n#'))
-          .map((k) => ({ key: k, description: (pkg.scripts || {})[k] })),
+          .map((k) => ({ key: k, description: pkg.scripts?.[k] ?? '' })),
       },
     ],
   });

@@ -1,4 +1,4 @@
-import type { ScriptGroup, PackageJson } from '../types.js';
+import type { PackageJson, ScriptGroup } from '../types.js';
 
 export function getLifecycleScripts(scripts: Record<string, string>): ScriptGroup | null {
   const lifecycleScripts = [

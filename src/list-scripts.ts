@@ -88,7 +88,9 @@ function getAllScriptInfo(): ScriptInfo[] {
   });
 
   // Add scripts from configurations (even if missing)
-  scriptToGroup.forEach((_, name) => allScriptNames.add(name));
+  for (const name of scriptToGroup.keys()) {
+    allScriptNames.add(name);
+  }
 
   // Build script info for each script
   for (const scriptName of allScriptNames) {

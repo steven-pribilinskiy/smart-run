@@ -6,6 +6,17 @@ import autocomplete from 'inquirer-autocomplete-standalone';
 import yaml from 'js-yaml';
 import { getCommandPreview, prettifyCommand, shouldPrettifyCommand } from 'shiny-command-line';
 import { AIService } from './ai-service.js';
+import { getScriptGroups as getScriptGroupsCore } from './core/config.js';
+import { detectPackageManager as detectPackageManagerCore } from './core/detect-package-manager.js';
+import { getPackageJson as getPackageJsonCore } from './core/package.js';
+import { isInsideSmartRunRepo } from './core/repo.js';
+import {
+  extractDescriptionFromEcho as extractDescriptionFromEchoCore,
+  getLifecycleScripts as getLifecycleScriptsCore,
+  getNpmScriptsInfoDescriptions as getNpmScriptsInfoDescriptionsCore,
+  getNtlDescriptions as getNtlDescriptionsCore,
+  parseNpmScriptGroups as parseNpmScriptGroupsCore,
+} from './core/scripts.js';
 import type {
   AutocompleteChoice,
   Choice,
@@ -14,32 +25,21 @@ import type {
   ScriptConfig,
   ScriptGroup,
 } from './types.js';
-import { isInsideSmartRunRepo } from './core/repo.js';
-import { getScriptGroups as getScriptGroupsCore } from './core/config.js';
-import { getPackageJson as getPackageJsonCore } from './core/package.js';
-import { detectPackageManager as detectPackageManagerCore } from './core/detect-package-manager.js';
-import {
-  getLifecycleScripts as getLifecycleScriptsCore,
-  parseNpmScriptGroups as parseNpmScriptGroupsCore,
-  getNpmScriptsInfoDescriptions as getNpmScriptsInfoDescriptionsCore,
-  getNtlDescriptions as getNtlDescriptionsCore,
-  extractDescriptionFromEcho as extractDescriptionFromEchoCore,
-} from './core/scripts.js';
 
 // npm-scripts-info functionality implemented directly
 
 // Export migration functions
 export { convertBetterScriptsToSmartRun } from './migration/convert/better-scripts.js';
 export {
-  convertNpmScriptsToSmartRun,
   convertNpmScriptsOrgToSmartRun,
+  convertNpmScriptsToSmartRun,
 } from './migration/convert/npm-scripts.js';
-export {
-  convertScriptsInfoToSmartRun,
-  convertNpmScriptsInfoToSmartRun,
-} from './migration/convert/scripts-info.js';
-export { convertScriptsDescriptionToSmartRun } from './migration/convert/scripts-description.js';
 export { convertNtlToSmartRun } from './migration/convert/ntl.js';
+export { convertScriptsDescriptionToSmartRun } from './migration/convert/scripts-description.js';
+export {
+  convertNpmScriptsInfoToSmartRun,
+  convertScriptsInfoToSmartRun,
+} from './migration/convert/scripts-info.js';
 export { detectConfigurationType } from './migration/detect.js';
 export { migrateToSmartRun } from './migration/main.js';
 
@@ -49,28 +49,6 @@ export type { AutocompleteChoice, Choice, PackageJson, PackageMeta, ScriptConfig
  * Check whether the current process is running inside the smart-run repository
  */
 export { isInsideSmartRunRepo };
-
-/**
- * Simple fuzzy matching function
- * Returns true if search term characters appear in order within the target string
- */
-function _fuzzyMatch(search: string, target: string): boolean {
-  if (!search) return true;
-  if (!target) return false;
-
-  const searchLower = search.toLowerCase();
-  const targetLower = target.toLowerCase();
-
-  let searchIndex = 0;
-
-  for (let i = 0; i < targetLower.length && searchIndex < searchLower.length; i++) {
-    if (targetLower[i] === searchLower[searchIndex]) {
-      searchIndex++;
-    }
-  }
-
-  return searchIndex === searchLower.length;
-}
 
 /**
  * Score fuzzy match quality (higher score = better match)

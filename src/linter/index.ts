@@ -1,13 +1,13 @@
-import { defaultRules } from './rules.js';
 import { loadConfig, loadLinterConfig, loadPackageJson } from './loader.js';
 import { formatReport } from './report.js';
+import { defaultRules } from './rules.js';
+import type { LinterIssue, LintReport } from './types.js';
 import {
+  validateAgainstPackage,
   validateBestPractices,
   validateContent,
   validateStructure,
-  validateAgainstPackage,
 } from './validators.js';
-import type { LintReport, LinterIssue } from './types.js';
 
 export function lintDirectory(directory = '.'): boolean {
   const path = (p: string) => (p === '.' ? 'package-meta.yaml' : `${directory}/package-meta.yaml`);

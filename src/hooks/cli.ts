@@ -15,7 +15,9 @@ export function runHooksCli(argv: string[]): void {
         force: args.includes('--force'),
       });
       console.log('🔧 Git hooks installation results:');
-      results.forEach((r) => console.log(`${r.success ? '✅' : '❌'} ${r.hook}: ${r.message}`));
+      for (const r of results) {
+        console.log(`${r.success ? '✅' : '❌'} ${r.hook}: ${r.message}`);
+      }
       if (results.some((r) => r.success)) {
         console.log('\n💡 Hooks installed! Configuration will be linted on git operations.');
       }
@@ -26,7 +28,9 @@ export function runHooksCli(argv: string[]): void {
         hooks: args.slice(1).length > 0 ? args.slice(1) : ['pre-commit'],
       });
       console.log('🔧 Git hooks uninstallation results:');
-      results.forEach((r) => console.log(`${r.success ? '✅' : '❌'} ${r.hook}: ${r.message}`));
+      for (const r of results) {
+        console.log(`${r.success ? '✅' : '❌'} ${r.hook}: ${r.message}`);
+      }
       break;
     }
     case 'status': {
